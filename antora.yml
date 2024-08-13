@@ -1,5 +1,5 @@
 name: rh-speed-training
-title: REPLACE Course Title
+title: Red Hat Speed Training Hands-On Exercises
 version: 1
 nav:
 - modules/ROOT/nav.adoc

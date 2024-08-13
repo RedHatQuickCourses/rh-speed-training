@@ -1,6 +1,6 @@
-= An Example Quick Course
+= Red Hat Speed Training Special Event for General Motors
 :navtitle: Home
 
 == Introduction
 
-This is an example quick course demonstrating the usage of Antora for authoring and publishing quick courses.
+Welcome to the Red Hat Speed Training Special Event created specifically for the Red Hat community at General Motors! This website contains the instructions for the hands-on portions of each of the three sessions throughout the day. After the associated Lightning Talk, the Red Hatters teaching will direct you to the correct landing page for the associated exercise. If you have any questions or need any assistance throughout the hands-on period, please raise your hand and one of our teachers will be with you as soon as possible! Have fun!

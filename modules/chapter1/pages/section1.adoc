@@ -2,85 +2,476 @@
 
 == Acknowledgements
 
-Elements of this exercise were taken from our DO400 INSERT TITLE OF COURSE HERE course; credit to the Red Hat Training team that developed the course for those elements! Find more great material on using Git for all sorts of things in Chapter 2 of DO400! Stop by our Red Hat Learning Subscription booth to learn more!
+Elements of this exercise were taken from our Red Hat DevOps Pipelines and Processes: CI/CD with Jenkins, Git, and Test-driven Development (DO400) course; credit to the Red Hat Training team that developed the course for those elements! Find more great material on using Git for all sorts of things in Chapter 2 of DO400! Stop by our Red Hat Learning Subscription booth to learn more!
 
 == Goals
 
-You should be able to access your (potentially newly created) GitHub account and use various "git <option>" commands to manage a new repository.
-Resist the urge to use copy and paste! We learn more when we type it out the long way.
+You should be able to create branches, add commits to those branches, and switch between branches.
 
-== Getting Started
-
-Before we begin this exercise, make sure you have a GitHub account! If you've never used GitHub before you don't have an account, follow the steps at this website to create one: https://github.com/signup
-
-Use either your personal or General Motors email to set up the account; it's not uncommon for frequent users of GitHub to have both a work and personal account so the choice is yours!
-
-Once you have your GitHub account, navigate to the terminal windo `student` user on the `workstation` machine.
-
-
-[subs="+quotes,+macros"]
-----
-[student@workstation ~]$ 
-----
 == Instructions
 
-1. Configure your git identity at the user level in your machine.
+[]
+1. Initialize a new repository.
+.. Create a new folder named `hello-branches`. This folder will contain your repository.
 +
 --
+[subs=+quotes]
+----
+[student@workstation]$ *mkdir hello-branches*
+----
+--
+.. Navigate to the `hello-branches` folder and initialize a new repository.
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *cd hello-branches*
+[student@workstation]$ *git init .*
+Initialized empty Git repository in _...output omitted..._/DO400/hello-branches/.git/
+----
+--
+.. Create the `helloworld.py` file with the following content:
++
+--
+----
+def say_hello(name):
+    print(f"Hello, {name}!")
+
+say_hello("world")
+----
+--
+.. Run the program:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *python helloworld.py*
+Hello, world!
+----
+
+[IMPORTANT]
+====
+In some Python installations, the Python binary is `python3` instead of `python`.
+====
+--
+.. Stage and commit the file:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git add helloworld.py*
+[studetn@workstation hello-branches]$ *git commit -m "_added helloworld_"*
+[master (root-commit) d4e8453] added helloworld
+ 1 file changed, 4 insertions(+)
+ create mode 100644 helloworld.py
+----
+
+The `-m` flag is a shortcut used to set the commit message.
+Without it, the default editor opens in order to prompt for the message.
+
 [NOTE]
 ====
-You can skip this step if you already have your git identity setup on your machine.
+`d4e8453` refers to the "commit hash" of the commit that was just created.
+It will differ on your machine.
 ====
 --
-.. Open a new terminal window on your workstation, and use the `git config` command to set up your user name.
+.. Rename the current branch `master` to `main`
 +
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *git config --global user.name "_Your User Name_"*
+[student@workstation hello-branches]$ *git branch -M main*
 ----
 --
-.. Use the `git config` command to set up your user email.
+2. Create a new feature branch.
+.. Create a new branch named `different-name`.
 +
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *git config --global user.email _your@user.email_*
+[student@workstation hello-branches]$ *git checkout -b different-name*
+Switched to a new branch 'different-name'
 ----
+
+The `-b` flag is a shortcut to create the branch before switching to it.
 --
-.. Use the `git config` command to review your identity settings.
+.. Check that your current branch is the newly created `different-name`.
 +
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *git config --list*
-user.name=Your User Name
-user.email=your@user.email
+[student@workstation hello-branches]$ *git status*
+On branch `different-name`
+nothing to commit, working tree clean
 ----
 --
-2. Create a folder for the exercise files and then initialize a Git repository.
-.. Create a folder named `git-basics` in your workspace directory.
+3. Make and commit changes to the `helloworld.py` file.
+.. Update the `helloworld.py` file to match:
 +
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *mkdir git-basics*
+def say_hello(name):
+    print(f"Hello, {name}!")
+
+say_hello(_"Pablo"_)
 ----
 --
-.. Navigate to the `git-basics` folder on the command terminal.
+.. View the changes made to `helloworld.py`.
 +
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *cd git-basics*
-[student@workstation git-basics]$
+[student@workstation hello-branches]$ *git diff*
+diff --git a/helloworld.py b/helloworld.py
+index 3c29293..f69eef6 100644
+--- a/helloworld.py
++++ b/helloworld.py
+@@ -1,4 +1,4 @@
+ def say_hello(name):
+     print(f"Hello, {name}!")
+
+-say_hello("world")
++say_hello("Pablo")
 ----
+
+[NOTE]
+====
+Git uses a pager when the changes to display are too large to fit the screen.
+In this pager you can scroll up and down to see the changes.
+Press kbd:[q] to exit the pager.
+====
 --
-.. Use the `git init` command to initialize the git repository in the current directory.
+.. Stage and commit the changes to `helloworld.py`:
 +
 --
 [subs=+quotes]
 ----
-[student@workstation git-basics]$ *git init .*
-Initialized empty Git repository in _...output omitted..._/git-basics/.git/
+[student@workstation hello-branches]$ *git add .*
+[student@workstation hello-branches]$ *git commit -m 'change name'*
+[different-name daf5db4] change name
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 ----
+--
+4. Compare the commit history between the `main` and `different-name` branches.
+.. View the commit history. The `different-name` branch has one more commit than the `main` branch.
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git log*
+commit daf5db416ffd47ab6d95a16eaaf4dabbcfa2cb72 (HEAD -> _different-name_)
+Author: Your User Name <your.email@example.com>
+Date:   Mon Sep 28 16:42:04 2020 -0400
+
+    change name
+
+commit d4e8453f6bc58a757a15f5ace664b3cd9afb65f6 (_main_)
+Author: Your User Name <your.email@example.com>
+Date:   Mon Sep 28 16:32:52 2020 -0400
+
+    added helloworld
+
+----
+
+[NOTE]
+====
+The Git log also uses a pager when the commit log is too large to fit the screen.
+Press kbd:[q] to exit the pager.
+====
+--
+5. Compare and merge the `my-feature-branch` branch.
+.. Switch to the `main` branch:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git checkout main*
+Switched to branch 'main'
+----
+--
+.. View the commit history of the `main` branch:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git log*
+commit d4e8453f6bc58a757a15f5ace664b3cd9afb65f6 (HEAD -> main)
+Author: Your User Name <your.email@example.com>
+Date:   Mon Sep 28 16:32:52 2020 -0400
+
+    added helloworld
+
+----
+
+There is one less commit than what was on the `different-name` branch.
+--
+.. Open `helloworld.py` in your editor.
+The file is missing the changes that were made on the `different-name` branch.
+It should have these contents:
++
+--
+----
+def say_hello(name):
+    print(f"Hello, {name}!")
+
+say_hello("world")
+----
+--
+.. Merge the `different-name` branch into the `main` branch.
+This performs a "fast-forward" merge.
+A fast-forward merge does not create a "merge commit".
+Instead, the merge requires only the branch itself to be moved to a different commit.
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git merge different-name*
+Updating d4e8453..daf5db4
+Fast-forward
+ helloworld.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+----
+--
+.. View the updated commit history of the `main` branch:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git log*
+commit daf5db416ffd47ab6d95a16eaaf4dabbcfa2cb72 (HEAD -> main, different-name)
+Author: Your User Name <your.email@example.com>
+Date:   Mon Sep 28 16:42:04 2020 -0400
+
+    change name
+
+commit d4e8453f6bc58a757a15f5ace664b3cd9afb65f6
+Author: Your User Name <your.email@example.com>
+Date:   Mon Sep 28 16:32:52 2020 -0400
+
+    added helloworld
+
+----
+--
+.. Delete the `different-name` branch
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git branch -d different-name*
+Deleted branch different-name (was daf5db4).
+----
+
+The `-d` flag deletes the branch.
+--
+6. Create a new branch and commit changes.
+.. Create and check out a branch named `goodbye-name`:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git checkout -b goodbye-name*
+Switched to a new branch 'goodbye-name'
+----
+--
+.. Open `helloworld.py` in your editor and change `Hello` to `Goodbye`:
++
+--
+[subs=+quotes]
+----
+def say_hello(name):
+    print(f"_Goodbye_, {name}!")
+
+say_hello("Pablo")
+----
+--
+.. Stage and commit the changes:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git commit -a -m 'say goodbye'*
+[goodbye-name 9e43ceb] say goodbye
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+----
+
+Including the `-a` flag stages _all_ local changes before creating the commit.
+--
+7. Make a conflicting commit on the `main` branch.
+.. Run `git checkout main`
+Switch back to the `main` branch:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git checkout main*
+Switched to branch 'main'
+----
+--
+.. Open `helloworld.py` in your editor and change `Hello` to `Welcome`:
++
+--
+[subs=+quotes]
+----
+def say_hello(name):
+    print(f"_Welcome_, {name}!")
+
+say_hello("Pablo")
+----
+--
+.. Stage and commit the changes:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git commit -a -m 'say welcome'*
+[main c80d322] say welcome
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+----
+
+[NOTE]
+====
+Good practice suggests not committing changes directly to the `main` branch.
+It is better to create a "feature branch" to house the changes.
+It is done here for the sake of example.
+====
+--
+8. Compare and merge the `goodbye-name` branch.
+.. View the differences between the contents of `helloworld.py` on the `main` and `goodbye-name` branches:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git diff goodbye-name*
+diff --git a/helloworld.py b/helloworld.py
+index 4e8dd88..22604ac 100644
+--- a/helloworld.py
++++ b/helloworld.py
+@@ -1,4 +1,4 @@
+ def say_hello(name):
+-    print(f"Goodbye, {name}!")
++    print(f"Welcome, {name}!")
+
+ say_hello("Pablo")
+----
+--
+.. Merge the `goodbye-name` branch into the `main` branch.
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git merge goodbye-name*
+Auto-merging helloworld.py
+CONFLICT (content): Merge conflict in helloworld.py
+Automatic merge failed; fix conflicts and then commit the result.
+----
+
+A conflict occurred while performing the merge.
+This is due to `main` and `goodbye-name` incorporating changes to the same line in the same file since the branches diverged.
+--
+.. Open `helloworld.py` in your editor.
+This is how the file will first appear:
++
+--
+----
+def say_hello(name):
+<<<<<<< HEAD
+    print(f"Welcome, {name}!")
+=======
+    print(f"Goodbye, {name}!")
+>>>>>>> goodbye-name
+
+say_hello("Pablo")
+----
+
+Git indicates the conflicting lines by using "conflict markers".
+These are lines beginning with sequences of `<`, `>`, and `=`.
+Specifically, the first block contains the changes from the `main` branch (`HEAD`), and the second block contains changes from the `goodbye-name` branch.
+--
+.. Fix the conflict by removing the conflict markers and correcting the code to match:
++
+--
+----
+def say_hello(name):
+    print(f"Goodbye, {name}!")
+
+say_hello("Pablo")
+----
+
+[NOTE]
+====
+After fixing conflicts, any source code should be fully functional and pass any tests.
+For example, if your programming language has a compilation step, the code should successfully compile.
+
+Be cautious not to accidentally commit any conflict markers into your repository.
+====
+--
+.. Run the program to ensure it is still working:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *python helloworld.py*
+Goodbye, Pablo!
+----
+--
+.. In order to indicate to Git that you have resolved the conflicts, stage and commit the conflicting file:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git commit -a*
+_...output omitted..._
+[main 32d7b8c] Merge branch 'goodbye-name' into main
+----
+
+When a commit message is omitted upon committing to resolve a conflicting merge, Git will open the default editor with a default commit message.
+--
+.. Remove the `goodbye-name` branch:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git branch -d goodbye-name*
+Deleted branch goodbye-name (was 9e43ceb).
+----
+--
+9. View the commit history to see that `main` has all of the changes from both branches:
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ *git log*
+commit 32d7b8c9b28c9b41cd5f4a97e63e8cb284622c1e (HEAD -> _main_)
+Merge: c80d322 9e43ceb
+Author: Your User Name <your.email@example.com>
+Date:   Tue Sep 29 18:45:02 2020 -0400
+
+    Merge branch 'goodbye-name' into main
+
+commit c80d32280f9b1165c9d74303b137c0bb0a8c59b5
+Author: Your User Name <your.email@example.com>
+Date:   Tue Sep 29 17:53:45 2020 -0400
+
+    say welcome
+
+commit 9e43ceb14b042fee5c08d41a2130a075b1c74113
+Author: Your User Name <your.email@example.com>
+Date:   Tue Sep 29 17:49:31 2020 -0400
+
+    say goodbye
+
+commit daf5db416ffd47ab6d95a16eaaf4dabbcfa2cb72
+Author: Your User Name <your.email@example.com>
+Date:   Mon Sep 28 16:42:04 2020 -0400
+
+    change name
+
+commit d4e8453f6bc58a757a15f5ace664b3cd9afb65f6
+Author: Your User Name <your.email@example.com>
+Date:   Mon Sep 28 16:32:52 2020 -0400
+
+    added helloworld
+
+----
+--

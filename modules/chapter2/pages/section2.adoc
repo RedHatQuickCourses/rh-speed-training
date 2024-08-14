@@ -1,0 +1,167 @@
+= Challenge Exercise: Can't contain your enthusiasm!
+
+== Goals
+
+Replicate the demo showed during the Lightning Talk! Pull a simple container image from a public repository and manage it with podman!
+
+
+
+== Getting Started
+
+Navigate to the terminal window as the `student` user on the `workstation` machine.
+
+
+[subs="+quotes,+macros"]
+----
+[student@workstation ~]$ 
+----
+
+
+[role='Checklist']
+== Instructions
+
+1. Check to verify there are no containers are currently running.
+
+a. Utilize the podman ps command to check for active containers
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *podman ps*
+CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
+----
+--
+b. If any containers appear in this list, you may remove them with the following command
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *podman rm -f <container name>*
+CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
+----
+--
+
+2. Pull a simple Apache image from a public repository.
+
+a. Run the podman pull command with the following variables
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *podman pull docker.io/library/httpd*
+Trying to pull docker.io/library/httpd:latest...
+...output omitted...
+Copying blob 358ca3c2eaff done
+Copying blob e584cd196457 done
+Copying config a42923e055 done
+Writing manifest to image destination
+a42923e05589d2d10c25e87736bc3b9537c38c2a6a87f37e9a71e288b01738a6
+----
+--
+b. Verify you have pulled the image by listing out all available images with the podman images command
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *podman images*
+REPOSITORY                       TAG          IMAGE ID         CREATED           SIZE     
+docker.io/library/httpd          latest                        1 minute ago    
+----
+--
++
+[NOTE]
+====
+There might be other images available and your details in IMAGE ID, CREATED, and SIZE will not match the above. That is normal and expected. Continue with the exercise so long as you successfully pulled the docker.io/library/httpd image.
+====
+
+3. Let's put this new image to the test! Using a simple podman run command, start the container and verify that it works.
+
+a. Use the podman run command to start the container
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *podman run - -name=httpd -d -it -p 8080:80 docker.io/library/httpd*
+649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527
+----
+--
+b. Verify the container is running
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *podman ps -a*
+CONTAINER ID      IMAGE                     COMMAND     CREATED           STATUS              NAMES
+649f023ae36d      docker.io/library/httpd   /bin/...    14 seconds ago    Up 13 seconds       httpd
+----
+--
+c. Open a web browser and navigate to http://localhost:8080 and verify that "It Works!" is displayed
+
+4. Let's say that you like the basics of what this website looks like (imagine it's a little more robust than a white screen with some text), but you want to change the language and save it. Let's go down that path! First, we'll need to make the change to the index.html file within the container to change the text that's displaying on the site. We can do this a few ways, but the simplist is to copy a new file into the container.
+
+a. Create a new index.html file in your home directory
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *vim index.html*
+----
+--
+b. Once in the editor, click "i" on your keyboard to enable editing with INSERT mode. Then, enter the following text (you can copy and paste this one):
++
+--
+[subs=+quotes]
+----
+<html><body><h1>Thanks for attending this Red Hat Speed Training Event, General Motors! Congratulations on making it to the second exercise!</h1></body></html>
+----
+--
+c. Click the ESCAPE key on your keyboard to exit INSERT mode.
+
+d. Save and quit the editor. From within the editor type (including the colon):
++
+--
+[subs=+quotes]
+----
+:q!
+Press Enter to save and quit
+----
+--
+
+5. Now we need to replace the index.html file in the container with the file we just created. To do that, we'll make use of the podman cp command to copy a file into the container.
+
+a. Copy the index.html file we just created into the container
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *podman cp index.html test:/usr/local/apache2/htdocs/*
+----
+--
+b. Verify that http://localhost:8080 now serves the text "Thanks for attending this Red Hat Speed Training Event, General Motors! Congratulations on making it to the second exercise!"
+
+6. Now that we've customized the container to our liking, we want to save that work so we can access it later. While there are various ways to do this, today we'll do it by creating a new image based on the running container with podman.
+
+a. Create a new image based on the running container using podman commit
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *podman commit httpd speedtraining-httpd*
+Getting image source signatures
+...output omitted...
+Copying blob sha256:3618712e31962b9feac1d4e4f44841e4848d0c88c60159b9973af35cfa4f7d7f
+Copying config sha256:80e3bde7902fbab711b9bbc670d3667649423b0b666717cb1710088d39bb4bd6
+Writing manifest to image destination
+80e3bde7902fbab711b9bbc670d3667649423b0b666717cb1710088d39bb4bd680e3bde7902fbab711b9bbc670d3667649423b0b666717cb1710088d39bb4bd6
+----
+--
+b. Verify you have saved the new image by listing out all available images with the podman images command
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *podman images*
+REPOSITORY                             TAG          IMAGE ID         CREATED           SIZE     
+localhost/speedtraining-httpd          latest                        1 minute ago    
+----
+--

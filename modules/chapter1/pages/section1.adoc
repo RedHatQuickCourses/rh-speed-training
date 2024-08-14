@@ -1,3 +1,86 @@
-= Section 1
+= Exercise: Let's Git our hands dirty!
 
-This is _Section 1_ of _Chapter 1_ in the *hello* quick course....
+== Acknowledgements
+
+Elements of this exercise were taken from our DO400 INSERT TITLE OF COURSE HERE course; credit to the Red Hat Training team that developed the course for those elements! Find more great material on using Git for all sorts of things in Chapter 2 of DO400! Stop by our Red Hat Learning Subscription booth to learn more!
+
+== Goals
+
+You should be able to access your (potentially newly created) GitHub account and use various "git <option>" commands to manage a new repository.
+Resist the urge to use copy and paste! We learn more when we type it out the long way.
+
+== Getting Started
+
+Before we begin this exercise, make sure you have a GitHub account! If you've never used GitHub before you don't have an account, follow the steps at this website to create one: https://github.com/signup
+
+Use either your personal or General Motors email to set up the account; it's not uncommon for frequent users of GitHub to have both a work and personal account so the choice is yours!
+
+Once you have your GitHub account, navigate to the terminal windo `student` user on the `workstation` machine.
+
+
+[subs="+quotes,+macros"]
+----
+[student@workstation ~]$ 
+----
+== Instructions
+
+1. Configure your git identity at the user level in your machine.
++
+--
+[NOTE]
+====
+You can skip this step if you already have your git identity setup on your machine.
+====
+--
+.. Open a new terminal window on your workstation, and use the `git config` command to set up your user name.
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *git config --global user.name "_Your User Name_"*
+----
+--
+.. Use the `git config` command to set up your user email.
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *git config --global user.email _your@user.email_*
+----
+--
+.. Use the `git config` command to review your identity settings.
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *git config --list*
+user.name=Your User Name
+user.email=your@user.email
+----
+--
+2. Create a folder for the exercise files and then initialize a Git repository.
+.. Create a folder named `git-basics` in your workspace directory.
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *mkdir git-basics*
+----
+--
+.. Navigate to the `git-basics` folder on the command terminal.
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *cd git-basics*
+[student@workstation git-basics]$
+----
+--
+.. Use the `git init` command to initialize the git repository in the current directory.
++
+--
+[subs=+quotes]
+----
+[student@workstation git-basics]$ *git init .*
+Initialized empty Git repository in _...output omitted..._/git-basics/.git/
+----

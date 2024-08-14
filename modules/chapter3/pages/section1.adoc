@@ -1,3 +1,28 @@
-= Section 1
+= Exercise: Automate this!
 
-This is _Section 1_ of _Chapter 3_ in the *hello* quick course....
+== Acknowledgements
+
+All credit for the steps in this exercise and the associated lab environment you are using go to the Red Hat Training development team! Find more fun exercises like this on containers in both our Red Hat System Administration II (RH134) and OpenShift Development I: Introduction to Containers with Podman (DO188) courses! Stop by our Red Hat Learning Subscription booth to learn more!
+
+== Goals
+
+You should be able to run containers in Podman by using the `podman run` command.
+Resist the urge to use copy and paste! We learn a lot more when we type it out the long way.
+
+
+
+== Getting Started
+
+As the `student` user on the `workstation` machine, use the `lab` command to prepare your system for this exercise.
+
+
+[subs="+quotes,+macros"]
+----
+[student@workstation ~]$ *lab start containers-creating*
+----
+
+
+[role='Checklist']
+== Instructions
+
+1. Use

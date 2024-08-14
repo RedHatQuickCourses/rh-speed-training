@@ -51,7 +51,7 @@ Hello, world!
 
 [IMPORTANT]
 ====
-In some Python installations, the Python binary is `python3` instead of `python`.
+In some Python installations, the Python binary is `python3` instead of `python`. In this environment we are using, both work equally well.
 ====
 --
 .. Stage and commit the file:

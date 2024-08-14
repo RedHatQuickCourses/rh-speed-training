@@ -390,7 +390,66 @@ localhost/speedtraining-httpd          latest                        1 minute ag
 </ol>
 </div>
 </li>
+<li>
+<p>Let&#8217;s test our work! Let&#8217;s stop the container running with the old image, and start a new container with the fresh image.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Stop and remove the old container</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>podman stop httpd</strong>
+httpd
+
+[student@workstation]$ <strong>podman rm httpd</strong>
+httpd</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that no page is responding at <a href="https://localhost:8080" class="bare">https://localhost:8080</a></p>
+</li>
+<li>
+<p>Use podman run to start a container using the newly created image</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>podman run - -name=httpdnew -d -it -p 8080:80 localhost/speedtraining-httpd</strong>
+649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Verify the container is running</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>podman ps -a</strong>
+CONTAINER ID      IMAGE                                     COMMAND     CREATED           STATUS              NAMES
+649f023ae36d      localhost/speedtraining-httpd/httpdnew   /bin/...    14 seconds ago    Up 13 seconds       httpdnew</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Open a web browser and navigate to <a href="http://localhost:8080" class="bare">http://localhost:8080</a> and verify that "Thanks for attending this Red Hat Speed Training Event, General Motors! Congratulations on making it to the second exercise!" is displayed.</p>
+</li>
 </ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Congratulations! You have commpleted the exercise!</p>
 </div>
 </div>
 </div>

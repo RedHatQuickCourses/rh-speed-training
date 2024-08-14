@@ -136,7 +136,7 @@
 <h2 id="_acknowledgements"><a class="anchor" href="#_acknowledgements"></a>Acknowledgements</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Elements of this exercise were taken from our DO400 INSERT TITLE OF COURSE HERE course; credit to the Red Hat Training team that developed the course for those elements! Find more great material on using Git for all sorts of things in Chapter 2 of DO400! Stop by our Red Hat Learning Subscription booth to learn more!</p>
+<p>Elements of this exercise were taken from our Red Hat DevOps Pipelines and Processes: CI/CD with Jenkins, Git, and Test-driven Development (DO400) course; credit to the Red Hat Training team that developed the course for those elements! Find more great material on using Git for all sorts of things in Chapter 2 of DO400! Stop by our Red Hat Learning Subscription booth to learn more!</p>
 </div>
 </div>
 </div>
@@ -144,27 +144,7 @@
 <h2 id="_goals"><a class="anchor" href="#_goals"></a>Goals</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You should be able to access your (potentially newly created) GitHub account and use various "git &lt;option&gt;" commands to manage a new repository.
-Resist the urge to use copy and paste! We learn more when we type it out the long way.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_getting_started"><a class="anchor" href="#_getting_started"></a>Getting Started</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Before we begin this exercise, make sure you have a GitHub account! If you&#8217;ve never used GitHub before you don&#8217;t have an account, follow the steps at this website to create one: <a href="https://github.com/signup" class="bare">https://github.com/signup</a></p>
-</div>
-<div class="paragraph">
-<p>Use either your personal or General Motors email to set up the account; it&#8217;s not uncommon for frequent users of GitHub to have both a work and personal account so the choice is yours!</p>
-</div>
-<div class="paragraph">
-<p>Once you have your GitHub account, navigate to the terminal windo <code>student</code> user on the <code>workstation</code> machine.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation ~]$</pre>
-</div>
+<p>You should be able to create branches, add commits to those branches, and switch between branches.</p>
 </div>
 </div>
 </div>
@@ -174,9 +154,94 @@ Resist the urge to use copy and paste! We learn more when we type it out the lon
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Configure your git identity at the user level in your machine.</p>
+<p>Initialize a new repository.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a new folder named <code>hello-branches</code>. This folder will contain your repository.</p>
 <div class="openblock">
 <div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>mkdir hello-branches</strong></pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Navigate to the <code>hello-branches</code> folder and initialize a new repository.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>cd hello-branches</strong>
+[student@workstation]$ <strong>git init .</strong>
+Initialized empty Git repository in <em>...output omitted...</em>/DO400/hello-branches/.git/</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Create the <code>helloworld.py</code> file with the following content:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>def say_hello(name):
+    print(f"Hello, {name}!")
+
+say_hello("world")</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Run the program:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>python helloworld.py</strong>
+Hello, world!</pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In some Python installations, the Python binary is <code>python3</code> instead of <code>python</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Stage and commit the file:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git add helloworld.py</strong>
+[studetn@workstation hello-branches]$ <strong>git commit -m "<em>added helloworld</em>"</strong>
+[master (root-commit) d4e8453] added helloworld
+ 1 file changed, 4 insertions(+)
+ create mode 100644 helloworld.py</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>-m</code> flag is a shortcut used to set the commit message.
+Without it, the default editor opens in order to prompt for the message.</p>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -185,7 +250,8 @@ Resist the urge to use copy and paste! We learn more when we type it out the lon
 </td>
 <td class="content">
 <div class="paragraph">
-<p>You can skip this step if you already have your git identity setup on your machine.</p>
+<p><code>d4e8453</code> refers to the "commit hash" of the commit that was just created.
+It will differ on your machine.</p>
 </div>
 </td>
 </tr>
@@ -193,41 +259,14 @@ Resist the urge to use copy and paste! We learn more when we type it out the lon
 </div>
 </div>
 </div>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Open a new terminal window on your workstation, and use the <code>git config</code> command to set up your user name.</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation]$ <strong>git config --global user.name "<em>Your User Name</em>"</strong></pre>
-</div>
-</div>
-</div>
-</div>
 </li>
 <li>
-<p>Use the <code>git config</code> command to set up your user email.</p>
+<p>Rename the current branch <code>master</code> to <code>main</code></p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>git config --global user.email <em>your@user.email</em></strong></pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Use the <code>git config</code> command to review your identity settings.</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation]$ <strong>git config --list</strong>
-user.name=Your User Name
-user.email=your@user.email</pre>
+<pre>[student@workstation hello-branches]$ <strong>git branch -M main</strong></pre>
 </div>
 </div>
 </div>
@@ -237,48 +276,584 @@ user.email=your@user.email</pre>
 </div>
 </li>
 <li>
-<p>Create a folder for the exercise files and then initialize a Git repository.</p>
+<p>Create a new feature branch.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Create a folder named <code>git-basics</code> in your workspace directory.</p>
+<p>Create a new branch named <code>different-name</code>.</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>mkdir git-basics</strong></pre>
+<pre>[student@workstation hello-branches]$ <strong>git checkout -b different-name</strong>
+Switched to a new branch 'different-name'</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The <code>-b</code> flag is a shortcut to create the branch before switching to it.</p>
 </div>
 </div>
 </div>
 </li>
 <li>
-<p>Navigate to the <code>git-basics</code> folder on the command terminal.</p>
+<p>Check that your current branch is the newly created <code>different-name</code>.</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>cd git-basics</strong>
-[student@workstation git-basics]$</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Use the <code>git init</code> command to initialize the git repository in the current directory.</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation git-basics]$ <strong>git init .</strong>
-Initialized empty Git repository in <em>...output omitted...</em>/git-basics/.git/</pre>
+<pre>[student@workstation hello-branches]$ <strong>git status</strong>
+On branch <code>different-name</code>
+nothing to commit, working tree clean</pre>
 </div>
 </div>
 </div>
 </div>
 </li>
 </ol>
+</div>
+</li>
+<li>
+<p>Make and commit changes to the <code>helloworld.py</code> file.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Update the <code>helloworld.py</code> file to match:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>def say_hello(name):
+    print(f"Hello, {name}!")
+
+say_hello(<em>"Pablo"</em>)</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>View the changes made to <code>helloworld.py</code>.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git diff</strong>
+diff --git a/helloworld.py b/helloworld.py
+index 3c29293..f69eef6 100644
+--- a/helloworld.py
++++ b/helloworld.py
+@@ -1,4 +1,4 @@
+ def say_hello(name):
+     print(f"Hello, {name}!")
+
+-say_hello("world")
++say_hello("Pablo")</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Git uses a pager when the changes to display are too large to fit the screen.
+In this pager you can scroll up and down to see the changes.
+Press kbd:[q] to exit the pager.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Stage and commit the changes to <code>helloworld.py</code>:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git add .</strong>
+[student@workstation hello-branches]$ <strong>git commit -m 'change name'</strong>
+[different-name daf5db4] change name
+ 1 file changed, 1 insertion(+), 1 deletion(-)</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Compare the commit history between the <code>main</code> and <code>different-name</code> branches.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>View the commit history. The <code>different-name</code> branch has one more commit than the <code>main</code> branch.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git log</strong>
+commit daf5db416ffd47ab6d95a16eaaf4dabbcfa2cb72 (HEAD -&gt; <em>different-name</em>)
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Mon Sep 28 16:42:04 2020 -0400
+
+    change name
+
+commit d4e8453f6bc58a757a15f5ace664b3cd9afb65f6 (<em>main</em>)
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Mon Sep 28 16:32:52 2020 -0400
+
+    added helloworld</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Git log also uses a pager when the commit log is too large to fit the screen.
+Press kbd:[q] to exit the pager.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Compare and merge the <code>my-feature-branch</code> branch.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Switch to the <code>main</code> branch:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git checkout main</strong>
+Switched to branch 'main'</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>View the commit history of the <code>main</code> branch:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git log</strong>
+commit d4e8453f6bc58a757a15f5ace664b3cd9afb65f6 (HEAD -&gt; main)
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Mon Sep 28 16:32:52 2020 -0400
+
+    added helloworld</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is one less commit than what was on the <code>different-name</code> branch.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Open <code>helloworld.py</code> in your editor.
+The file is missing the changes that were made on the <code>different-name</code> branch.
+It should have these contents:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>def say_hello(name):
+    print(f"Hello, {name}!")
+
+say_hello("world")</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Merge the <code>different-name</code> branch into the <code>main</code> branch.
+This performs a "fast-forward" merge.
+A fast-forward merge does not create a "merge commit".
+Instead, the merge requires only the branch itself to be moved to a different commit.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git merge different-name</strong>
+Updating d4e8453..daf5db4
+Fast-forward
+ helloworld.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>View the updated commit history of the <code>main</code> branch:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git log</strong>
+commit daf5db416ffd47ab6d95a16eaaf4dabbcfa2cb72 (HEAD -&gt; main, different-name)
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Mon Sep 28 16:42:04 2020 -0400
+
+    change name
+
+commit d4e8453f6bc58a757a15f5ace664b3cd9afb65f6
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Mon Sep 28 16:32:52 2020 -0400
+
+    added helloworld</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Delete the <code>different-name</code> branch</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git branch -d different-name</strong>
+Deleted branch different-name (was daf5db4).</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>-d</code> flag deletes the branch.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Create a new branch and commit changes.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create and check out a branch named <code>goodbye-name</code>:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git checkout -b goodbye-name</strong>
+Switched to a new branch 'goodbye-name'</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Open <code>helloworld.py</code> in your editor and change <code>Hello</code> to <code>Goodbye</code>:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>def say_hello(name):
+    print(f"<em>Goodbye</em>, {name}!")
+
+say_hello("Pablo")</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Stage and commit the changes:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git commit -a -m 'say goodbye'</strong>
+[goodbye-name 9e43ceb] say goodbye
+ 1 file changed, 1 insertion(+), 1 deletion(-)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Including the <code>-a</code> flag stages <em>all</em> local changes before creating the commit.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Make a conflicting commit on the <code>main</code> branch.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Run <code>git checkout main</code>
+Switch back to the <code>main</code> branch:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git checkout main</strong>
+Switched to branch 'main'</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Open <code>helloworld.py</code> in your editor and change <code>Hello</code> to <code>Welcome</code>:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>def say_hello(name):
+    print(f"<em>Welcome</em>, {name}!")
+
+say_hello("Pablo")</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Stage and commit the changes:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git commit -a -m 'say welcome'</strong>
+[main c80d322] say welcome
+ 1 file changed, 1 insertion(+), 1 deletion(-)</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Good practice suggests not committing changes directly to the <code>main</code> branch.
+It is better to create a "feature branch" to house the changes.
+It is done here for the sake of example.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Compare and merge the <code>goodbye-name</code> branch.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>View the differences between the contents of <code>helloworld.py</code> on the <code>main</code> and <code>goodbye-name</code> branches:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git diff goodbye-name</strong>
+diff --git a/helloworld.py b/helloworld.py
+index 4e8dd88..22604ac 100644
+--- a/helloworld.py
++++ b/helloworld.py
+@@ -1,4 +1,4 @@
+ def say_hello(name):
+-    print(f"Goodbye, {name}!")
++    print(f"Welcome, {name}!")
+
+ say_hello("Pablo")</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Merge the <code>goodbye-name</code> branch into the <code>main</code> branch.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git merge goodbye-name</strong>
+Auto-merging helloworld.py
+CONFLICT (content): Merge conflict in helloworld.py
+Automatic merge failed; fix conflicts and then commit the result.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A conflict occurred while performing the merge.
+This is due to <code>main</code> and <code>goodbye-name</code> incorporating changes to the same line in the same file since the branches diverged.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Open <code>helloworld.py</code> in your editor.
+This is how the file will first appear:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>def say_hello(name):
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+    print(f"Welcome, {name}!")
+=======
+    print(f"Goodbye, {name}!")
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; goodbye-name
+
+say_hello("Pablo")</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Git indicates the conflicting lines by using "conflict markers".
+These are lines beginning with sequences of <code>&lt;</code>, <code>&gt;</code>, and <code>=</code>.
+Specifically, the first block contains the changes from the <code>main</code> branch (<code>HEAD</code>), and the second block contains changes from the <code>goodbye-name</code> branch.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Fix the conflict by removing the conflict markers and correcting the code to match:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>def say_hello(name):
+    print(f"Goodbye, {name}!")
+
+say_hello("Pablo")</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>After fixing conflicts, any source code should be fully functional and pass any tests.
+For example, if your programming language has a compilation step, the code should successfully compile.</p>
+</div>
+<div class="paragraph">
+<p>Be cautious not to accidentally commit any conflict markers into your repository.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Run the program to ensure it is still working:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>python helloworld.py</strong>
+Goodbye, Pablo!</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>In order to indicate to Git that you have resolved the conflicts, stage and commit the conflicting file:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git commit -a</strong>
+<em>...output omitted...</em>
+[main 32d7b8c] Merge branch 'goodbye-name' into main</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When a commit message is omitted upon committing to resolve a conflicting merge, Git will open the default editor with a default commit message.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Remove the <code>goodbye-name</code> branch:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git branch -d goodbye-name</strong>
+Deleted branch goodbye-name (was 9e43ceb).</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>View the commit history to see that <code>main</code> has all of the changes from both branches:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation hello-branches]$ <strong>git log</strong>
+commit 32d7b8c9b28c9b41cd5f4a97e63e8cb284622c1e (HEAD -&gt; <em>main</em>)
+Merge: c80d322 9e43ceb
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Tue Sep 29 18:45:02 2020 -0400
+
+    Merge branch 'goodbye-name' into main
+
+commit c80d32280f9b1165c9d74303b137c0bb0a8c59b5
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Tue Sep 29 17:53:45 2020 -0400
+
+    say welcome
+
+commit 9e43ceb14b042fee5c08d41a2130a075b1c74113
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Tue Sep 29 17:49:31 2020 -0400
+
+    say goodbye
+
+commit daf5db416ffd47ab6d95a16eaaf4dabbcfa2cb72
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Mon Sep 28 16:42:04 2020 -0400
+
+    change name
+
+commit d4e8453f6bc58a757a15f5ace664b3cd9afb65f6
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Mon Sep 28 16:32:52 2020 -0400
+
+    added helloworld</pre>
+</div>
+</div>
+</div>
 </div>
 </li>
 </ol>

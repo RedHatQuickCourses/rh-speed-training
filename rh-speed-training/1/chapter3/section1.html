@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Exercise: Automate this! :: Red Hat Speed Training Hands-On Exercises</title>
+    <title>Exercise: Automate this! :: Red Hat Speed Training Labs</title>
     <link rel="prev" href="index.html">
-    <link rel="next" href="../appendix/appendix.html">
+    <link rel="next" href="section2.html">
     <meta name="generator" content="Antora 3.1.3">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -15,7 +15,7 @@
   <nav class="navbar">
     <div class="navbar-brand">
       <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
-      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Red Hat Speed Training Hands-On Exercises</a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Red Hat Speed Training Labs</a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
         <span></span>
@@ -34,7 +34,7 @@
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu">
-    <h3 class="title"><a href="../index.html">Red Hat Speed Training Hands-On Exercises</a></h3>
+    <h3 class="title"><a href="../index.html">Red Hat Speed Training Labs</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
@@ -51,6 +51,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../chapter1/section1.html">Exercise: Let&#8217;s Git our hands dirty!</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section2.html">Bonus Exercise: Git outta town!</a>
   </li>
 </ul>
   </li>
@@ -81,6 +84,9 @@
   <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="section1.html">Exercise: Automate this!</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="section2.html">Bonus Exercise: Automate the people!</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -97,12 +103,12 @@
 </div>
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
-    <span class="title">Red Hat Speed Training Hands-On Exercises</span>
+    <span class="title">Red Hat Speed Training Labs</span>
     <span class="version">1</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <a class="title" href="../index.html">Red Hat Speed Training Hands-On Exercises</a>
+      <a class="title" href="../index.html">Red Hat Speed Training Labs</a>
       <ul class="versions">
         <li class="version is-current is-latest">
           <a href="../index.html">1</a>
@@ -120,7 +126,7 @@
   <a href="../index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="../index.html">Red Hat Speed Training Hands-On Exercises</a></li>
+    <li><a href="../index.html">Red Hat Speed Training Labs</a></li>
     <li><a href="index.html">Ansible Everywhere</a></li>
     <li><a href="section1.html">Exercise: Automate this!</a></li>
   </ul>
@@ -136,7 +142,7 @@
 <h2 id="_acknowledgements"><a class="anchor" href="#_acknowledgements"></a>Acknowledgements</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>All credit for the steps in this exercise and the associated lab environment you are using go to the Red Hat Training development team! Find more fun exercises like this on containers in both our Red Hat System Administration II (RH134) and OpenShift Development I: Introduction to Containers with Podman (DO188) courses! Stop by our Red Hat Learning Subscription booth to learn more!</p>
+<p>All credit for the steps in this exercise and the associated lab environment you are using go to the Red Hat Training development team! Find more fun exercises like this on Ansible in one of our many automation courses including: Linux Automation with Ansible (RH294), Network Automation with the Ansible Automation Platform (DO457), or Windows Automation with the Ansible Automation Platform (DO417). Stop by our Red Hat Learning Subscription booth or ask one of your instructors to learn more!</p>
 </div>
 </div>
 </div>
@@ -144,20 +150,22 @@
 <h2 id="_goals"><a class="anchor" href="#_goals"></a>Goals</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You should be able to run containers in Podman by using the <code>podman run</code> command.
-Resist the urge to use copy and paste! We learn a lot more when we type it out the long way.</p>
+<p>You should be able to write a playbook using basic YAML syntax and Ansible Playbook structure, and successfully run it with the <code>ansible-navigator run</code> command.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_getting_started"><a class="anchor" href="#_getting_started"></a>Getting Started</h2>
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>As the <code>student</code> user on the <code>workstation</code> machine, use the <code>lab</code> command to prepare your system for this exercise.</p>
 </div>
+<div class="paragraph">
+<p>This command prepares your environment and ensures that all required resources are available.</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation ~]$ <strong>lab start containers-creating</strong></pre>
+<pre>[student@workstation ~]$ <strong>lab start playbook-basic</strong></pre>
 </div>
 </div>
 </div>
@@ -165,10 +173,294 @@ Resist the urge to use copy and paste! We learn a lot more when we type it out t
 <div class="sect1 Checklist">
 <h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The <code>/home/student/playbook-basic</code> Ansible project directory has been created on the <code>workstation</code> machine for this exercise. This directory already has an <code>ansible.cfg</code> configuration file. It also has an inventory file named <code>inventory</code> that defines a <code>web</code> group, which includes the managed hosts <code>serverc.lab.example.com</code> and <code>serverd.lab.example.com</code> as members.</p>
+</div>
+<div class="paragraph">
+<p>This exercise has you create a playbook named <code>site.yml</code> in the project directory. This playbook contains one play, which targets members of the <code>web</code> host group. The playbook uses tasks that run modules to ensure that the following conditions are met on the managed hosts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>httpd</code> package is present, using the <code>ansible.builtin.dnf</code> module.</p>
+</li>
+<li>
+<p>The local <code>files/index.html</code> file is copied to <code>/var/www/html/index.html</code> on each managed host, using the <code>ansible.builtin.copy</code> module.</p>
+</li>
+<li>
+<p>The <code>httpd</code> service is started and enabled, using the <code>ansible.builtin.service</code> module.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can use the <code>ansible-navigator doc</code> command to help you understand the keywords needed for each of the modules.</p>
+</div>
+<div class="paragraph">
+<p>After the playbook is written, validate its syntax and then use the <code>ansible-navigator run</code> command to run the playbook to implement the configuration.</p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Use</p>
+<p>Change into the <code>/home/student/playbook-basic</code> directory.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation ~]$ <strong>cd ~/playbook-basic</strong>
+[student@workstation playbook-basic]$</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Create a new playbook called <code>/home/student/playbook-basic/site.yml</code>. Start writing a play that targets the hosts in the <code>web</code> host group.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create and open <code>~/playbook-basic/site.yml</code>. The first line of the file should be three dashes to indicate the start of the playbook.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>---</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>The next line starts the play. It needs to start with a dash and a space before the first keyword in the play. Name the play with an arbitrary string documenting the play&#8217;s purpose, using the <code>name</code> keyword.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>---
+- name: Install and start Apache HTTPD</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Add a <code>hosts</code> keyword-value pair to specify that the play run on hosts in the inventory&#8217;s <code>web</code> host group. Make sure that the <code>hosts</code> keyword is indented two spaces so it aligns with the <code>name</code> keyword in the preceding line.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>The complete <code>site.yml</code> file should consist of the following content:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>---
+- name: Install and start Apache HTTPD
+  hosts: web</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Continue to edit the <code>/home/student/playbook-basic/site.yml</code> file, and add a <code>tasks</code> keyword and the three tasks for your play that were specified in the instructions.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Add a <code>tasks</code> keyword indented by two spaces (aligned with the <code>hosts</code> keyword) to start the list of tasks. The file should now consist of the following content:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>---
+- name: Install and start Apache HTTPD
+  hosts: web
+  tasks:</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Add the first task. Indent by four spaces, and start the task with a dash and a space, and then give the task a name, such as <code>Ensure httpd package is present</code>. Use the <code>ansible.builtin.dnf</code> module for this task. Indent the module keywords two more spaces; set the package name to <code>httpd</code> and the package state to <code>present</code>. The task should consist of the following content:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>    - name: Ensure httpd package is present
+      ansible.builtin.dnf:
+        name: httpd
+        state: present</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Add the second task. Match the format of the previous task, and give the task a name, such as <code>Correct index.html is present</code>. Use the <code>ansible.builtin.copy</code> module. Configure the module keywords to set the <code>src</code> key to <code>files/index.html</code> and the <code>dest</code> key to <code>/var/www/html/index.html</code>. The task should consist of the following content:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>    - name: Correct index.html is present
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: /var/www/html/index.html</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Add the third task to start and enable the <code>httpd</code> service. Match the format of the previous two tasks, and give the new task a name, such as <code>Ensure httpd is started</code>. Use the <code>ansible.builtin.service</code> module for this task. Set the <code>name</code> key of the service to <code>httpd</code>, the <code>state</code> key to <code>started</code>, and the <code>enabled</code> key to <code>true</code>. The task should consist of the following content:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>    - name: Ensure httpd is started
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Your entire <code>site.yml</code> Ansible Playbook should match the following example. Make sure that the indentation of your play&#8217;s keywords, the list of tasks, and each task&#8217;s keywords are all correct.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>---
+- name: Install and start Apache HTTPD
+  hosts: web
+  tasks:
+    - name: Ensure httpd package is present
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: Correct index.html is present
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+
+    - name: Ensure httpd is started
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Save the file and exit.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Before running your playbook, run the <code>ansible-navigator run --syntax-check</code> command to validate its syntax. Correct any reported errors before continuing. You should see output similar to the following:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation playbook-basic]$ <strong>ansible-navigator run \</strong>
+&gt; <strong>-m stdout site.yml --syntax-check</strong>
+playbook: /home/student/playbook-basic/site.yml</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Run your playbook. Read through the output generated to ensure that all tasks completed successfully.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation playbook-basic]$ <strong>ansible-navigator run \</strong>
+&gt; <strong>-m stdout site.yml</strong>
+
+PLAY [Install and start Apache HTTPD] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [serverd.lab.example.com]
+ok: [serverc.lab.example.com]
+
+TASK [Ensure httpd package is present] ************************************************
+changed: [serverd.lab.example.com]
+changed: [serverc.lab.example.com]
+
+TASK [Correct index.html is present] *******************************************
+changed: [serverd.lab.example.com]
+changed: [serverc.lab.example.com]
+
+TASK [Ensure httpd is started] ********************************************************
+changed: [serverd.lab.example.com]
+changed: [serverc.lab.example.com]
+
+PLAY RECAP *********************************************************************
+serverc.lab.example.com    : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+serverd.lab.example.com    : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>If all went well, you should be able to run the playbook a second time and see all tasks complete with no changes to the managed hosts.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation playbook-basic]$ <strong>ansible-navigator run \</strong>
+&gt; <strong>-m stdout site.yml</strong>
+
+PLAY [Install and start Apache HTTPD] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [serverd.lab.example.com]
+ok: [serverc.lab.example.com]
+
+TASK [Ensure httpd package is present] ************************************************
+ok: [serverd.lab.example.com]
+ok: [serverc.lab.example.com]
+
+TASK [Correct index.html is present] *******************************************
+ok: [serverc.lab.example.com]
+ok: [serverd.lab.example.com]
+
+TASK [Ensure httpd is started] ********************************************************
+ok: [serverd.lab.example.com]
+ok: [serverc.lab.example.com]
+
+PLAY RECAP *********************************************************************
+serverc.lab.example.com    : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+serverd.lab.example.com    : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Use the <code>curl</code> command to verify that both <code>serverc.lab.example.com</code> and <code>serverd.lab.example.com</code> are configured as an HTTPD server.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation playbook-basic]$ <strong>curl serverc.lab.example.com</strong>
+This is a test page.
+[student@workstation playbook-basic]$ <strong>curl serverd.lab.example.com</strong>
+This is a test page.</pre>
+</div>
+</div>
+</div>
+</div>
 </li>
 </ol>
 </div>
@@ -176,7 +468,7 @@ Resist the urge to use copy and paste! We learn a lot more when we type it out t
 </div>
 <nav class="pagination">
   <span class="prev"><a href="index.html">Ansible Everywhere</a></span>
-  <span class="next"><a href="../appendix/appendix.html">Appendix</a></span>
+  <span class="next"><a href="section2.html">Bonus Exercise: Automate the people!</a></span>
 </nav>
 </article>
   </div>

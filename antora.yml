@@ -1,5 +1,5 @@
 name: rh-speed-training
-title: Red Hat Speed Training Hands-On Exercises
+title: Red Hat Speed Training Labs
 version: 1
 nav:
 - modules/ROOT/nav.adoc

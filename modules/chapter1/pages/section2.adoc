@@ -1,0 +1,48 @@
+= Bonus Exercise: Git outta town!
+
+== Goals
+Explore setting up a GitHub account and interacting with a remote repository from the command line.
+
+== Prerequisites
+To execute this section, you will need a GitHub account. It can be either a personal or a work account. If you do not already have a GitHub account, navigate to https://github.com/signup and follow the steps on that interactive page!
+
+Log in to your GitHub account and cache your credentials. Configure your git identity at the user level in your machine.
+
+--
+[NOTE]
+====
+You can skip this step if you already have your git identity setup on your machine.
+====
+--
+Open a new terminal window on your workstation, and use the `git config` command to set up your user name.
+
+--
+[subs=+quotes]
+----
+[student@workstation]$ *git config --global user.name "_Your User Name_"*
+----
+--
+Use the `git config` command to set up your user email.
+
+--
+[subs=+quotes]
+----
+[student@workstation]$ *git config --global user.email _your@user.email_*
+----
+--
+Use the `git config` command to review your identity settings.
+
+--
+[subs=+quotes]
+----
+[student@workstation]$ *git config --list*
+user.name=Your User Name
+user.email=your@user.email
+----
+--
+
+== Instructions
+
+What should we do here? Should we fork a popular repository and edit it? Fork the DO400 repository and edit it? The real magic here is teaching SSH connectivity with GitHub and then just showing the interactivity - so keeping it simple seems like a good idea.
+
+What about a sample repository used for the PHP container image?

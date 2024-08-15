@@ -2,7 +2,7 @@
 
 == Acknowledgements
 
-Elements of this exercise were taken from our Red Hat DevOps Pipelines and Processes: CI/CD with Jenkins, Git, and Test-driven Development (DO400) course; credit to the Red Hat Training team that developed the course for those elements! Find more great material on using Git for all sorts of things in Chapter 2 of DO400! Stop by our Red Hat Learning Subscription booth to learn more!
+Most of this exercise was taken from our Red Hat DevOps Pipelines and Processes: CI/CD with Jenkins, Git, and Test-driven Development (DO400) course; credit to the Red Hat Training team that developed the course for those elements! Find more great material on using Git for all sorts of things in Chapter 2 of DO400! Stop by our Red Hat Learning Subscription booth to learn more!
 
 == Goals
 

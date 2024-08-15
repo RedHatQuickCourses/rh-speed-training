@@ -1,0 +1,383 @@
+= Bonus Exercise: Automate the people!
+
+== Acknowledgements
+
+All credit for the steps in this exercise and the associated lab environment you are using go to the Red Hat Training development team! Find more fun exercises like this on Ansible in one of our many automation courses including: Linux Automation with Ansible (RH294), Network Automation with the Ansible Automation Platform (DO457), or Windows Automation with the Ansible Automation Platform (DO417). Stop by our Red Hat Learning Subscription booth or ask one of your instructors to learn more!
+
+== Goals
+
+* Create a new user group.
+* Manage users by using the `ansible.builtin.user` module.
+* Populate SSH authorized keys by using the `ansible.posix.authorized_key` module.
+* Modify the `/etc/ssh/sshd_config` file and a configuration file in `/etc/sudoers.d` by using the `ansible.builtin.lineinfile` module.
+
+== Prerequisites
+
+As the `student` user on the `workstation` machine, use the `lab` command to prepare your system for this exercise.
+
+This command prepares your environment and ensures that all required resources are available.
+
+
+[subs="+quotes,+macros"]
+----
+[student@workstation ~]$ *lab start system-users*
+----
+
+
+[role='Checklist']
+== Instructions
+
+Your organization requires that all hosts have the same local users available. These users should belong to the `webadmin` user group, which can use the `sudo` command without specifying a password. Also, the users++'++ SSH public keys should be distributed in the environment to their `~/.ssh/authorized_keys` files to allow key-based authentication, and the `root` user should not be allowed to log in directly using SSH.
+
+Write a playbook to ensure that the users specified in the `/home/student/system-users/vars/users_vars.yml` file and the `webadmin` user group are present on the managed hosts and meet the preceding criteria.
+
+
+[]
+1. Change into the `/home/student/system-users` directory.
++
+--
+[subs="+quotes,+macros"]
+----
+[student@workstation ~]$ *cd ~/system-users*
+[student@workstation system-users]$
+----
+--
+2. Examine the existing `vars/users_vars.yml` variable file.
++
+--
+[subs="+quotes,+macros"]
+----
+---
+users:
+  - username: user1
+    groups: webadmin
+  - username: user2
+    groups: webadmin
+  - username: user3
+    groups: webadmin
+  - username: user4
+    groups: webadmin
+  - username: user5
+    groups: webadmin
+----
+
+It uses the `username` variable name to set the correct username, and the `groups` variable to define supplementary groups that the user should belong to.
+--
+3. Start writing the `/home/student/system-users/users.yml` playbook. Define a single play in the playbook that targets the `webservers` host group.
++
+--
+Add a `vars_files` clause that loads the variables in the `vars/users_vars.yml` file, which has been created for you, and which contains all the usernames that are required for this exercise.
+
+Add the `tasks` clause to the playbook.
+
+The `users.yml` playbook should consist of the following content:
+
+
+[subs="+quotes,+macros"]
+----
+---
+- name: Create multiple local users
+  hosts: webservers
+  vars++_++files:
+    - vars/users++_++vars.yml
+  tasks:
+----
+--
+4. Add two tasks to the play.
++
+--
+Create the `webadmin` user group on the managed hosts by using the `ansible.builtin.group` module in the first task.
+
+Create the users specified in the `vars/users_vars.yml` file by using the `ansible.builtin.user` module to loop over those variables in the second task.
+
+Run the `users.yml` playbook.
+--
+.. Add the first task to the play to ensure that the group `webadmin` exists on your managed hosts.
++
+--
+The first task should consist of the following content:
+
+
+[subs="+quotes,+macros"]
+----
+    - name: Add webadmin group
+      ansible.builtin.group:
+        name: webadmin
+        state: present
+----
+--
+.. Add a second task to the play that uses the `ansible.builtin.user` module to ensure that the users exist on your managed hosts.
++
+--
+Add a `loop: "{{ users }}"` clause to the task to iterate over every user found in the `vars/users_vars.yml` file.
+
+For the `name` parameter for the users, use ``item['username']``, not ``item``. This allows each list item in the variable file to be structured as a dictionary of multiple variables that includes additional information about each user in the list, specifically which supplementary groups the user should be a member of.
+
+The entire playbook should consist of the following content:
+
+
+[subs="+quotes,+macros"]
+----
+---
+- name: Create multiple local users
+  hosts: webservers
+  vars++_++files:
+    - vars/users++_++vars.yml
+  tasks:
+
+    - name: Add webadmin group
+      ansible.builtin.group:
+        name: webadmin
+        state: present
+
+    - name: Create user accounts
+      ansible.builtin.user:
+        name: "{{ item['username'] }}"
+        groups: "{{ item['groups'] }}"
+      loop: "{{ users }}"
+----
+--
+.. Run the `users.yml` playbook:
++
+--
+[subs="+quotes,+macros"]
+----
+[student@workstation system-users]$ *ansible-navigator run \*
+> *-m stdout users.yml*
+
+PLAY [Create multiple local users] ++*******************************************++
+
+TASK [Gathering Facts] ++*******************************************************++
+ok: [servera.lab.example.com]
+
+TASK [Add webadmin group] ++****************************************************++
+changed: [servera.lab.example.com]
+
+TASK [Create user accounts] ++**************************************************++
+changed: [servera.lab.example.com] => (item={'username': 'user1', 'groups': 'webadmin'})
+changed: [servera.lab.example.com] => (item={'username': 'user2', 'groups': 'webadmin'})
+changed: [servera.lab.example.com] => (item={'username': 'user3', 'groups': 'webadmin'})
+changed: [servera.lab.example.com] => (item={'username': 'user4', 'groups': 'webadmin'})
+changed: [servera.lab.example.com] => (item={'username': 'user5', 'groups': 'webadmin'})
+
+PLAY RECAP ++*******************************************************************++
+servera.lab.example.com    : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+----
+--
+5. Ensure the SSH public keys have been properly distributed to the managed hosts by adding a third task to the play that uses the `ansible.posix.authorized_key` module.
++
+--
+In the `files` directory, each user has a unique SSH public key file. The module loops through the list of users, finds the appropriate key by using the `username` variable, and pushes the key to the managed host.
+
+For the `key` parameter, use the following Jinja2 expression for its value to evaluate the contents of the appropriate public key file. A lookup function is used with the `file` plug-in to read the file, and its file name is constructed using string operations.
+
+
+[subs="+quotes,+macros"]
+----
+"{{ lookup('file', 'files/'+ item['username'] + '.key.pub') }}"
+----
+
+The third task should consist of the following content:
+
+
+[subs="+quotes,+macros"]
+----
+    - name: Add authorized keys
+      ansible.posix.authorized++_++key:
+        user: "{{ item['username'] }}"
+        key: "{{ lookup('file', 'files/'+ item['username'] + '.key.pub') }}"
+      loop: "{{ users }}"
+----
+--
+6. Add a fourth task to the play that uses the `ansible.builtin.lineinfile` module to modify the `sudo` configuration file and allow the `webadmin` group members to use `sudo` without a password on the managed host. Use the `validate` parameter to validate the new configuration entry.
++
+--
+The fourth task should consist of the following content:
+
+
+[subs="+quotes,+macros"]
+----
+    - name: Modify sudo config to allow webadmin users sudo without a password
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers.d/webadmin
+        state: present
+        create: true
+        mode: 0440
+        line: "%webadmin ALL=(ALL) NOPASSWD: ALL"
+        validate: /usr/sbin/visudo -cf %s
+----
+--
+7. Add a fifth task to ensure that the `root` user is not permitted to log in using SSH directly. Use `notify: Restart sshd` to trigger a handler to restart SSH.
++
+--
+The fifth task should consist of the following content:
+
+
+[subs="+quotes,+macros"]
+----
+    - name: Disable root login via SSH
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd++_++config
+        regexp: "^PermitRootLogin"
+        line: "PermitRootLogin no"
+      notify: Restart sshd
+----
+--
+8. In the first line after the location of the variable file, add a new handler definition named ``Restart sshd``.
+.. Define the `Restart sshd` handler as follows:
++
+--
+[subs="+quotes,+macros"]
+----
+__...output omitted...__
+    - vars/users++_++vars.yml
+  handlers:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+----
+--
+.. The `users.yml` playbook should consist of the following content:
++
+--
+[subs="+quotes,+macros"]
+----
+---
+- name: Create multiple local users
+  hosts: webservers
+  vars++_++files:
+    - vars/users++_++vars.yml
+  handlers:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+  tasks:
+    - name: Add webadmin group
+      ansible.builtin.group:
+        name: webadmin
+        state: present
+
+    - name: Create user accounts
+      ansible.builtin.user:
+        name: "{{ item['username'] }}"
+        groups: "{{ item['groups'] }}"
+      loop: "{{ users }}"
+
+    - name: Add authorized keys
+      ansible.posix.authorized++_++key:
+        user: "{{ item['username'] }}"
+        key: "{{ lookup('file', 'files/'+ item['username'] + '.key.pub') }}"
+      loop: "{{ users }}"
+
+    - name: Modify sudo config to allow webadmin users sudo without a password
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers.d/webadmin
+        state: present
+        create: true
+        mode: 0440
+        line: "%webadmin ALL=(ALL) NOPASSWD: ALL"
+        validate: /usr/sbin/visudo -cf %s
+
+    - name: Disable root login via SSH
+      ansible.builtin.lineinfile:
+        dest: /etc/ssh/sshd++_++config
+        regexp: "^PermitRootLogin"
+        line: "PermitRootLogin no"
+      notify: Restart sshd
+----
+--
+.. Run the `users.yml` playbook.
++
+--
+[subs="+quotes,+macros"]
+----
+[student@workstation system-users]$ *ansible-navigator run \*
+> *-m stdout users.yml*
+
+PLAY [Create multiple local users] ++*******************************************++
+
+TASK [Gathering Facts] ++*******************************************************++
+ok: [servera.lab.example.com]
+
+TASK [Add webadmin group] ++****************************************************++
+ok: [servera.lab.example.com]
+
+TASK [Create user accounts] ++**************************************************++
+ok: [servera.lab.example.com] => (item={'username': 'user1', 'groups': 'webadmin'})
+ok: [servera.lab.example.com] => (item={'username': 'user2', 'groups': 'webadmin'})
+ok: [servera.lab.example.com] => (item={'username': 'user3', 'groups': 'webadmin'})
+ok: [servera.lab.example.com] => (item={'username': 'user4', 'groups': 'webadmin'})
+ok: [servera.lab.example.com] => (item={'username': 'user5', 'groups': 'webadmin'})
+
+TASK [Add authorized keys] ++***************************************************++
+changed: [servera.lab.example.com] => (item={'username': 'user1', 'groups': 'webadmin'})
+changed: [servera.lab.example.com] => (item={'username': 'user2', 'groups': 'webadmin'})
+changed: [servera.lab.example.com] => (item={'username': 'user3', 'groups': 'webadmin'})
+changed: [servera.lab.example.com] => (item={'username': 'user4', 'groups': 'webadmin'})
+changed: [servera.lab.example.com] => (item={'username': 'user5', 'groups': 'webadmin'})
+
+TASK [Modify sudo config to allow webadmin users sudo without a password] ++***++
+changed: [servera.lab.example.com]
+
+TASK [Disable root login via SSH] ++*******************************************++
+changed: [servera.lab.example.com]
+
+RUNNING HANDLER [Restart sshd] ++**********************************************++
+changed: [servera.lab.example.com]
+
+PLAY RECAP ++******************************************************************++
+servera.lab.example.com    : ok=7    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+----
+--
+9. Use SSH as the `user1` user and log in to the `servera` server. After logging in, use `sudo -i` command to change to the `root` user.
+.. Use SSH as the `user1` user and log in to the `servera` server.
++
+--
+[subs="+quotes,+macros"]
+----
+[student@workstation system-users]$ *ssh user1@servera*
+Register this system with Red Hat Insights: insights-client --register
+Create an account or view all your systems at \https://red.ht/insights-dashboard
+
+[user1@servera ~]$
+----
+--
+.. Change to the `root` user.
++
+--
+[subs="+quotes,+macros"]
+----
+[user1@servera ~]$ *sudo -i*
+[root@servera ~]#
+----
+--
+.. Log out of ``servera``.
++
+--
+[subs="+quotes,+macros"]
+----
+[root@servera ~]# *exit*
+logout
+[user1@servera ~]$ *exit*
+logout
+Connection to servera closed.
+[student@workstation system-users]$
+----
+--
+10. Try to log in to `servera` as the `root` user directly. This step should fail because the SSH daemon configuration has been modified not to permit direct `root` user logins.
+.. From the `workstation` machine, use SSH as the `root` user and log in to the `servera` server.
++
+--
+[subs="+quotes,+macros"]
+----
+[student@workstation system-users]$ *ssh root@servera*
+root@servera's password: *redhat*
+Permission denied, please try again.
+root@servera's password:
+----
+
+This confirms that the SSH configuration denied direct access to the system for the `root` user.
+--

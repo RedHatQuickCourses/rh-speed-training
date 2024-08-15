@@ -1,4 +1,4 @@
-= Red Hat Speed Training Special Event for General Motors
+= Red Hat Speed Training Labs
 :navtitle: Home
 
 == Introduction

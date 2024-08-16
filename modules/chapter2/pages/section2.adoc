@@ -175,18 +175,18 @@ CONTAINER ID  IMAGE                                           COMMAND           
 a. Open Podman Desktop.
 Click btn:[Activities] at the upper-left corner of the top bar, and then click the btn:[Podman Desktop] icon.
 +
-image::/assets/podman-desktop-ge-podman-desktop.png[width="70%",align="center"]
+image::podman-desktop-ge-podman-desktop.png[width="70%",align="center"]
 
 b. Click btn:[Containers] in the Podman Desktop navigation panel.
 The list includes the containers that you created in the exercise.
 Verify that the Apache HTTP container is running.
 +
-image::assets/podman-desktop-ge-list-containers.png[width="95%",align="center"]
+image::podman-desktop-ge-list-containers.png[width="95%",align="center"]
 
 c. Click btn:[Images].
 The list of local images displays the `ubi9/ubi` and the `rhel9/httpd-24` images.
 +
-image::assets/podman-desktop-ge-image-list.png[width="95%",align="center"]
+image::podman-desktop-ge-image-list.png[width="95%",align="center"]
 
 5. Use Podman Desktop to start another Apache HTTP container that maps its port to port 8090 in the workstation.
 
@@ -199,7 +199,7 @@ b. In the container creation form, enter the following values:
 * Local port for 8080/tcp: `8090`
 * Local port for 8443/tcp: `8443`
 +
-image::assets/podman-desktop-ge-create-container.png[width="90%",align="center"]
+image::podman-desktop-ge-create-container.png[width="90%",align="center"]
 
 c. Click btn:[Start Container].
 +
@@ -212,7 +212,7 @@ d. Navigate to the containers menu and verify that the `desktop-test` container 
 
 e. In the `desktop-test` container, click the vertical ellipsis icon (btn:[⋮]) on the right, select btn:[Open Browser], and then click btn:[Yes] in the confirmation dialog box.
 +
-image::assets/podman-desktop-ge-open-browser.png[width="90%",align="center"]
+image::podman-desktop-ge-open-browser.png[width="90%",align="center"]
 
 f. Verify that the browser can access the HTTP server at `\http://localhost:8090`.
 

@@ -139,10 +139,18 @@
 <article class="doc">
 <h1 class="page">Bonus Exercise: Git outta town!</h1>
 <div class="sect1">
+<h2 id="_acknowledgements"><a class="anchor" href="#_acknowledgements"></a>Acknowledgements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Most of this exercise was taken from our Red Hat DevOps Pipelines and Processes: CI/CD with Jenkins, Git, and Test-driven Development (DO400) course; credit to the Red Hat Training team that developed the course for those elements! Find more great material on using Git for all sorts of things in Chapter 2 of DO400! Stop by our Red Hat Learning Subscription booth to learn more!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_goals"><a class="anchor" href="#_goals"></a>Goals</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Explore setting up a GitHub account and interacting with a remote repository from the command line.</p>
+<p>Explore setting up a GitHub account and interacting with a remote repository from the command line. You should be able to create tags, publish releases, and use forks to contribute to other repositories.</p>
 </div>
 </div>
 </div>
@@ -217,10 +225,756 @@ user.email=your@user.email</pre>
 <h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>What should we do here? Should we fork a popular repository and edit it? Fork the DO400 repository and edit it? The real magic here is teaching SSH connectivity with GitHub and then just showing the interactivity - so keeping it simple seems like a good idea.</p>
+<p>To set up the scenario necessary to complete this exercise, first you must create a new GitHub organization with your GitHub account.
+Next, you will create a repository in the organization by forking the source code we provide at <code><a href="https://github.com/RedHatTraining/DO400-apps-external" class="bare">https://github.com/RedHatTraining/DO400-apps-external</a></code>.
+The repository forked in your organization will simulate a third-party project in which to contribute.</p>
 </div>
 <div class="paragraph">
-<p>What about a sample repository used for the PHP container image?</p>
+<p>With the organization set up as a hypothetical third-party project, you will practice a common contribution workflow, forking the third-party project into your username account and creating pull requests back to the third-party project to propose code changes.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create your own GitHub organization.
+This organization will host your simulated third-party project.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Open a web browser and navigate to <code><a href="https://github.com" class="bare">https://github.com</a></code>.</p>
+</li>
+<li>
+<p>Sign in with your GitHub credentials. If you do not have an account, then create one.</p>
+</li>
+<li>
+<p>Click menu:+[New organization] in the upper right of the window.</p>
+</li>
+<li>
+<p>Choose the Free plan. Click <strong>Join for free</strong>.</p>
+</li>
+<li>
+<p>Configure your new organization.
+Fill in the <strong>Organization account name</strong> field with the <code><em>YOUR_GITHUB_USER</em>-do400-org</code> value.
+Type your email in the <strong>Contact email</strong> field.
+Select <code>My personal account</code> as the owner.
+Click <strong>Next</strong>.</p>
+<div class="openblock">
+<div class="content">
+<div class="imageblock text-center unresolved">
+<div class="content">
+<img src="images/vcs/release-organization-form.png" alt="release organization form" width="100%">
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>In the confirmation screen, click <strong>Complete setup</strong>.
+You must provide your password to complete this step.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Create a repository in your organization by forking the <code>DO400-apps-external</code> repository.
+The newly created repository in your organization simulates a third-party project in which to contribute.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>In a web browser, navigate to the repository located at <code><a href="https://github.com/RedHatTraining/DO400-apps-external" class="bare">https://github.com/RedHatTraining/DO400-apps-external</a></code>.</p>
+</li>
+<li>
+<p>Click <code>Fork</code> in the upper right and select the <code><em>YOUR_GITHUB_USER</em>-do400-org</code> organization as the namespace.
+This creates the <code><em>YOUR_GITHUB_USER</em>-do400-org/DO400-apps-external</code> repository.</p>
+<div class="openblock">
+<div class="content">
+<div class="imageblock text-center unresolved">
+<div class="content">
+<img src="images/vcs/git-fork-org.png" alt="git fork org" width="70%">
+</div>
+</div>
+<div class="paragraph">
+<p>At this point, you have set up the scenario to contribute to a third-party project.
+You will treat the repository you have just created as the <em>upstream</em> repository, meaning that you will consider this repository as the third-party project you send your contributions to.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Fork the upstream repository to start contributing to the upstream project.
+Fork the <code><em>YOUR_GITHUB_USER</em>-do400-org/DO400-apps-external</code> repository to your username account and clone the forked repository located at https://github.com/YOUR_GITHUB_USER/DO400-apps-external.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>From the upstream repository main page located at https://github.com/YOUR_GITHUB_USER-do400-org/DO400-apps-external, click <code>Fork</code> and select your username as the namespace.</p>
+<div class="openblock">
+<div class="content">
+<div class="imageblock text-center unresolved">
+<div class="content">
+<img src="images/vcs/git-fork-org-to-user.png" alt="git fork org to user" width="90%">
+</div>
+</div>
+<div class="paragraph">
+<p>The new fork is located at https://github.com/YOUR_GITHUB_USER/DO400-apps-external.
+In this exercise, you will contribute to the upstream by sending pull requests from this fork to the organization upstream repository.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Click the <strong>Code</strong> button and copy the HTTPS URL.</p>
+</li>
+<li>
+<p>Switch to the command line and navigate to your workspace folder.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Clone the repository by using the <code>git clone</code> command and the copied URL.
+Enter your GitHub username and personal access token when prompted.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>git clone \
+https://github.com/<em>YOUR_GITHUB_USER</em>/DO400-apps-external</strong>
+Username for 'https://github.com': <em>YOUR_GITHUB_USER</em>
+Password for 'https://your_github_user@github.com': <em>YOUR_GITHUB_PERSONAL_ACCESS_TOKEN</em>
+Cloning into 'DO400-apps-external'...
+remote: Enumerating objects: 151, done.
+remote: Total 151 (delta 0), reused 0 (delta 0), pack-reused 151
+Receiving objects: 100% (151/151), 149.14 KiB | 208.00 KiB/s, done.
+Resolving deltas: 100% (58/58), done.</pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Make sure that you clone the repository from your username account and not from your organization.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>By default, the <code>git clone</code> creates a folder with the same name as the repository and clones the code inside the created folder.
+You can change the folder by adding the folder name as a parameter of the <code>git clone</code> command.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Create a tag. Next, create a release by using the created tag.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Navigate to the repository folder and create the <code>1.0.0</code> tag by using the <code>git tag</code> command:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>cd DO400-apps-external</strong>
+[student@workstation DO400-apps-external]$ <strong>git tag 1.0.0</strong></pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Use the <code>git tag</code> command to verify that the tag has been created:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git tag</strong>
+1.0.0</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If Git shows the output by using a pager, press kbd:[q] to quit the pager.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Use <code>git push origin --tags</code> to push the tag to your username fork on GitHub.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>By default, Git does not push tags to the remote.
+To push tags, you must use the <code>--tags</code> parameter.
+If prompted, enter your GitHub username and personal access token.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git push origin --tags</strong>
+Username for 'https://github.com': <em>YOUR_GITHUB_USER</em>
+Password for 'https://your_github_user@github.com': <em>YOUR_GITHUB_PERSONAL_ACCESS_TOKEN</em>
+Total 0 (delta 0), reused 0 (delta 0)
+To https://github.com/your_github_user/DO400-apps-external.git
+ * [new tag]         1.0.0 -&gt; 1.0.0</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Switch back to the web browser and navigate to the main GitHub page for your fork located at https://github.com/YOUR_GITHUB_USER/DO400-apps-external.
+Click the <strong>Releases</strong> link in the right pane.</p>
+<div class="openblock">
+<div class="content">
+<div class="imageblock text-center unresolved">
+<div class="content">
+<img src="images/vcs/git-releases-btn.png" alt="git releases btn" width="50%">
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>On the releases page, click btn:[Draft a new release].</p>
+<div class="openblock">
+<div class="content">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Normally you do not create releases in a forked repository.</p>
+</div>
+<div class="paragraph">
+<p>You should use forks as a tool to contribute to the upstream repository.
+Upstream owners can later create releases with your contributions.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Start typing <code>1.0.0</code> in the btn:[Tag version] field and select <code>1.0.0</code>.
+This is the tag that you just created.
+Do not change the <code>Target: main</code> selector.</p>
+</li>
+<li>
+<p>Enter a value in the btn:[Release title] field.
+The btn:[Existing tag] label should appear under the tag field, confirming that you are using the <code>1.0.0</code> tag that you created.</p>
+<div class="openblock">
+<div class="content">
+<div class="imageblock text-center unresolved">
+<div class="content">
+<img src="images/vcs/release-form.png" alt="release form" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, click btn:[Publish release] to create the release.
+This takes you to the newly created release page.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Create and merge a pull request from your username fork (origin) to your organization repository (upstream).</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>In your terminal, create a new branch named <code>hello-redhat</code>:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git checkout -b hello-redhat</strong>
+Switched to a new branch 'hello-redhat'</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Inside the <code>hello</code> folder, create a new file <code>hellorh.py</code> with the following content:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>print("Hello Red Hat!")</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Stage and commit the <code>hello/hellorh.py</code> file:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git add hello</strong>
+[student@workstation DO400-apps-external]$ <strong>git commit -m "added hello Red Hat"</strong>
+[hello-redhat 60db2e8] added hello Red Hat
+ 1 file changed, 1 insertion(+)
+ create mode 100644 hello/hellorh.py</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Push the new branch to the username fork by using <code>git push -u origin hello-redhat</code>.
+The <code>-u</code> parameter is an alias of <code>--set-upstream</code> and it is used to set the upstream branch.
+Enter your GitHub username and password if prompted.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git push -u origin hello-redhat</strong>
+<em>...output omitted...</em>
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 12 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 308 bytes | 308.00 KiB/s, done.
+Total 3 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+remote:
+remote: Create a pull request for 'hello-redhat' on GitHub by visiting:
+remote:      https://github.com/your_github_user/DO400-apps-external/pull/new/hello-redhat
+remote:
+To https://github.com/your_github_user/DO400-apps-external.git
+ * [new branch]      hello-redhat -&gt; hello-redhat
+Branch 'hello-redhat' set up to track remote branch 'hello-redhat' from 'origin'.</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Switch back to the web browser and navigate to the GitHub page of your fork located at https://github.com/YOUR_GITHUB_USER/DO400-apps-external.
+Click <strong>Pull requests</strong> to navigate to the pull requests page.
+In the pull requests page, click <strong>New pull request</strong>.</p>
+</li>
+<li>
+<p>In the branches selection area, click the <strong>compare: main</strong> selector to select the <code>hello-redhat</code> branch.
+Observe how you are merging your changes from the <code>hello-redhat</code> branch of your username fork (<code><em>YOUR_GITHUB_USER</em>/DO400-apps-external</code>) into the <code>main</code> branch of the organization upstream repository (<code><em>YOUR_GITHUB_USER</em>-do400-org/DO400-apps-external</code>).
+Next, click the <strong>Create pull request</strong> button to open the pull request creation form.</p>
+<div class="openblock">
+<div class="content">
+<div class="imageblock text-center unresolved">
+<div class="content">
+<img src="images/vcs/release-compare-branches.png" alt="release compare branches" width="100%">
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Make sure you do not select <code>RedHatTraining/DO400-apps-external</code> as the base repository.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>In the pull request creation form, click btn:[Create pull request] to submit the form and open the pull request.</p>
+<div class="openblock">
+<div class="content">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When creating a pull request, try to set meaningful titles and descriptions to add better context to your changes.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Review your changes and merge the pull request into the <code>main</code> branch of the upstream organization repository.
+Click <strong>Merge pull request</strong>.
+Click <strong>Confirm merge</strong> on the confirmation form that shows up.</p>
+<div class="openblock">
+<div class="content">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You should not normally merge your own pull requests.</p>
+</div>
+<div class="paragraph">
+<p>In most cases, pull requests are merged by repository owners or maintainers.
+Consider that, when merging this pull request, you have acted as the owner of the upstream repository.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>A <strong>Delete branch</strong> button is displayed immediately after the merge.
+The branch <code>hello-redhat</code> is unnecessary now because all of its changes have been merged into the <code>main</code> branch.
+Click <strong>Delete branch</strong> to delete the <code>hello-redhat</code> remote branch.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Pull changes from your username fork.
+Check that the <code>main</code> branch is not updated.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>On the command line, switch to the <code>main</code> branch:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git checkout main</strong>
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Pull the changes from the <code>origin</code> remote.
+The <code>origin</code> remote refers to the repository forked in your username account (<code><em>YOUR_GITHUB_USER</em>/DO400-apps-external</code>).
+Enter your GitHub username and password if prompted.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git pull origin main</strong>
+<em>...output omitted...</em>
+From https://github.com/your_github_user/DO400-apps-external
+ * branch            main     -&gt; FETCH_HEAD
+Already up to date.</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Run <code>git log</code> and notice that your changes from the <code>hello-redhat</code> branch were not incorporated.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git log</strong>
+commit c34ac6fcb5eea6ed4c62b665f0bb3b6c18f9a579 (HEAD -&gt; main, <code>tag: 1.0.0</code>, origin/main, origin/HEAD)
+<em>...output omitted...</em></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note how the last commit in the <code>main</code> branch is still the commit tagged as <code>1.0.0</code>.
+This is because you merged the pull request to the <strong>upstream</strong> repository (<code><em>YOUR_GITHUB_USER</em>-do400-org/DO400-apps-external</code>) and not the username fork (<code><em>YOUR_GITHUB_USER</em>/DO400-apps-external</code>).</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Configure and pull from the <code>upstream</code> remote.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>In the web browser, navigate to the main page of your organization upstream repository, located at: https://github.com/YOUR_GITHUB_USER-do400-org/DO400-apps-external.
+Click the <strong>Code</strong> button and copy the HTTPS URL.</p>
+</li>
+<li>
+<p>Configure a new remote called <code>upstream</code> to point to your organization repository:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git remote add upstream \
+https://github.com/<em>YOUR_GITHUB_USER</em>-do400-org/DO400-apps-external.git</strong></pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Pull from the <code>upstream</code> remote by using <code>git pull upstream main -p</code>.
+Enter your GitHub username and password if prompted.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git pull upstream main</strong>
+<em>...output omitted...</em>
+remote: Enumerating objects: 1, done.
+remote: Counting objects: 100% (1/1), done.
+remote: Total 1 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (1/1), done.
+From https://github.com/your_github_user-do400-org/DO400-apps-external
+ * branch            main     -&gt; FETCH_HEAD
+ * [new branch]      main     -&gt; upstream/main
+Updating 6459e50..d4492a5
+Fast-forward
+ hello/hellorh.py | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 hello/hellorh.py</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Run <code>git log</code> to see the local <code>main</code> branch has been updated:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git log</strong>
+commit d4492a5546f3088af378ef287dd272970ac3eb5d (HEAD -&gt; <code>main</code>, <code>upstream/main</code>)
+Merge: 6459e50 60db2e8
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Thu Oct 1 12:54:59 2020 +0200
+
+    Merge pull request #1 from your_github_user/hello-redhat
+
+    added hello Red Hat
+
+commit 60db2e8b62bad2320e66aa94e147c66aefc71139 (origin/hello-redhat, hello-redhat)
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Thu Oct 1 12:38:01 2020 +0200
+
+    added hello Red Hat
+
+<em>...output omitted...</em></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice how both the local and the upstream <code>main</code> branches point to the same commit.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Create a new release from GitHub.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Push the changes on <code>main</code> to the forked repository with <code>git push origin main</code>.
+Enter your GitHub username and password if prompted.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git push origin main</strong>
+<em>...output omitted...</em>
+Total 0 (delta 0), reused 0 (delta 0)
+To https://github.com/your_github_user/DO400-apps-external.git
+   6459e50..d4492a5  main -&gt; main</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Refresh the GitHub page for your username fork located at https://github.com/YOUR_GITHUB_USER/DO400-apps-external.
+You should see the latest commit and changes.</p>
+</li>
+<li>
+<p>Click btn:[Releases] on the right.</p>
+</li>
+<li>
+<p>On the releases page, click btn:[Draft a new release].</p>
+<div class="openblock">
+<div class="content">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Normally you should not create releases in a forked repository.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Enter <code>2.0.0</code> in the <strong>Tag version</strong> field and enter a value in the <strong>Release title</strong> field.</p>
+</li>
+<li>
+<p>Click <strong>Publish release</strong> to create the release.
+You are taken to your release&#8217;s page.</p>
+</li>
+<li>
+<p>On the command line, run <code>git pull --tags</code>.
+Enter your GitHub username and password if prompted.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git pull --tags</strong>
+<em>...output omitted...</em>
+From https://github.com/your_github_user/DO400-apps-external
+ * <code>[new tag]         2.0.0      -&gt; 2.0.0</code>
+Already up to date.</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Run <code>git log</code> to see your updated changes on <code>main</code> and the new <code>2.0.0</code> tag:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>git log</strong>
+commit d4492a5546f3088af378ef287dd272970ac3eb5d (HEAD -&gt; main, <code>tag: 2.0.0</code>, upstream/main, origin/main, origin/HEAD)
+Merge: 6459e50 60db2e8
+Author: Your User Name &lt;your.email@example.com&gt;
+Date:   Thu Oct 1 12:54:59 2020 +0200
+
+    Merge pull request #1 from your_github_user/hello-redhat
+
+    added hello Red Hat
+
+<em>...output omitted...</em></pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Clean up your local files and the remote repositories and organization.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Remove your local <code>DO400-apps-external</code> folder</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation DO400-apps-external]$ <strong>cd ..</strong>
+[student@workstation]$ <strong>rm -rf DO400-apps-external</strong></pre>
+</div>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Remove the downstream and upstream repositories.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Go to your GitHub repository settings page at https://github.com/YOUR_GITHUB_USER/DO400-apps-external/settings.</p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Scroll to the <code>Danger Zone</code> at the bottom and click <strong>Delete this repository</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Type the repository name in the popup message and confirm the deletion clicking <strong>I understand the consequences, delete this repository</strong>.
+If requested, type your password to confirm your identity.</p>
+</div>
+<div class="paragraph">
+<p>Repeat the same steps for the upstream repository at https://github.com/YOUR_GITHUB_USER-do400-org/DO400-apps-external/settings</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Remove the organization.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Enter the organization settings at https://github.com/organizations/YOUR_GITHUB_USER-do400-org/settings/profile.</p>
+</div>
+<div class="paragraph">
+<p>Scroll to the <code>Danger Zone</code> at the bottom and click <strong>Delete this organization</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Type the repository name in the popup message and confirm the deletion.</p>
+</div>
+<div class="openblock">
+<div class="content">
+
+</div>
 </div>
 </div>
 </div>

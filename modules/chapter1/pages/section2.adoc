@@ -68,7 +68,7 @@ Select `My personal account` as the owner.
 Click *Next*.
 +
 --
-image::images/vcs/release-organization-form.png[align="center",width="100%"]
+image::release-organization-form.png[align="center",width="100%"]
 --
 .. In the confirmation screen, click *Complete setup*.
 You must provide your password to complete this step.
@@ -79,7 +79,7 @@ The newly created repository in your organization simulates a third-party projec
 This creates the `_YOUR_GITHUB_USER_-do400-org/DO400-apps-external` repository.
 +
 --
-image::images/vcs/git-fork-org.png[align="center",width="70%"]
+image::git-fork-org.png[align="center",width="70%"]
 
 At this point, you have set up the scenario to contribute to a third-party project.
 You will treat the repository you have just created as the _upstream_ repository, meaning that you will consider this repository as the third-party project you send your contributions to.
@@ -89,7 +89,7 @@ Fork the `_YOUR_GITHUB_USER_-do400-org/DO400-apps-external` repository to your u
 .. From the upstream repository main page located at \https://github.com/YOUR_GITHUB_USER-do400-org/DO400-apps-external, click `Fork` and select your username as the namespace.
 +
 --
-image::images/vcs/git-fork-org-to-user.png[align="center",width="90%"]
+image::git-fork-org-to-user.png[align="center",width="90%"]
 
 The new fork is located at \https://github.com/YOUR_GITHUB_USER/DO400-apps-external.
 In this exercise, you will contribute to the upstream by sending pull requests from this fork to the organization upstream repository.
@@ -173,7 +173,7 @@ To https://github.com/your_github_user/DO400-apps-external.git
 Click the *Releases* link in the right pane.
 +
 --
-image::images/vcs/git-releases-btn.png[align="center",width="50%"]
+image::git-releases-btn.png[align="center",width="50%"]
 --
 .. On the releases page, click btn:[Draft a new release].
 +
@@ -193,7 +193,7 @@ Do not change the `Target: main` selector.
 The btn:[Existing tag] label should appear under the tag field, confirming that you are using the `1.0.0` tag that you created.
 +
 --
-image::images/vcs/release-form.png[align="center",width="100%"]
+image::release-form.png[align="center",width="100%"]
 
 Finally, click btn:[Publish release] to create the release.
 This takes you to the newly created release page.
@@ -260,7 +260,7 @@ Observe how you are merging your changes from the `hello-redhat` branch of your 
 Next, click the *Create pull request* button to open the pull request creation form.
 +
 --
-image::images/vcs/release-compare-branches.png[align="center",width="100%"]
+image::release-compare-branches.png[align="center",width="100%"]
 
 [IMPORTANT]
 ====

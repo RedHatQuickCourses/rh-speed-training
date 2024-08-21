@@ -212,7 +212,7 @@ Date:   Mon Sep 28 16:32:52 2020 -0400
 [NOTE]
 ====
 The Git log also uses a pager when the commit log is too large to fit the screen.
-Press kbd:[q] to exit the pager.
+Press *q* to exit the pager.
 ====
 --
 5. Compare and merge the `my-feature-branch` branch.

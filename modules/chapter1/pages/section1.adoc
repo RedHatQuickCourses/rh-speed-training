@@ -510,3 +510,13 @@ Date:   Mon Sep 28 16:32:52 2020 -0400
 
 ----
 --
+
+10. That ends the exercise! If you have time to advance to the Bonus Exercise, feel free to do so now. Before you do; be sure to change back to the home directory of the student user
++
+--
+[subs=+quotes]
+----
+[student@workstation hello-branches]$ cd
+[student@workstaion ]
+----
+--

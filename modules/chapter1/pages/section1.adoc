@@ -8,6 +8,41 @@ Most of this exercise was taken from our Red Hat DevOps Pipelines and Processes:
 
 You should be able to create branches, add commits to those branches, and switch between branches.
 
+== Prerequisites
+--
+[NOTE]
+====
+You can skip this step if you already have your git identity setup on your machine.
+====
+--
+Open a new terminal window on your workstation, and use the `git config` command to set up your user name.
+
+--
+[subs=+quotes]
+----
+[student@workstation]$ *git config --global user.name "_Your User Name_"*
+----
+--
+Use the `git config` command to set up your user email.
+
+--
+[subs=+quotes]
+----
+[student@workstation]$ *git config --global user.email _your@user.email_*
+----
+--
+Use the `git config` command to review your identity settings.
+
+--
+[subs=+quotes]
+----
+[student@workstation]$ *git config --list*
+user.name=Your User Name
+user.email=your@user.email
+----
+--
+
+
 == Instructions
 
 []

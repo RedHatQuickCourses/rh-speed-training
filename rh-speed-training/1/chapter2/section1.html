@@ -261,7 +261,7 @@ docker.io/library/httpd          latest                        1 minute ago</pre
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman run - -name=httpd -d -it -p 8080:80 docker.io/library/httpd</strong>
+<pre>[student@workstation]$ <strong>podman run --name=httpd -d -it -p 8080:80 docker.io/library/httpd</strong>
 649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527</pre>
 </div>
 </div>
@@ -310,7 +310,7 @@ CONTAINER ID      IMAGE                     COMMAND     CREATED           STATUS
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>&lt;html&gt;&lt;body&gt;&lt;h1&gt;Thanks for attending this Red Hat Speed Training Event, General Motors! Congratulations on making it to the second exercise!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;</pre>
+<pre>&lt;html&gt;&lt;body&gt;&lt;h1&gt;Thanks for attending this Red Hat Speed Training Event, General Motors!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;</pre>
 </div>
 </div>
 </div>
@@ -325,7 +325,7 @@ CONTAINER ID      IMAGE                     COMMAND     CREATED           STATUS
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>:q!
+<pre>:wq
 Press Enter to save and quit</pre>
 </div>
 </div>
@@ -345,14 +345,14 @@ Press Enter to save and quit</pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman cp index.html test:/usr/local/apache2/htdocs/</strong></pre>
+<pre>[student@workstation]$ <strong>podman cp index.html httpd:/usr/local/apache2/htdocs/</strong></pre>
 </div>
 </div>
 </div>
 </div>
 </li>
 <li>
-<p>Verify that <a href="http://localhost:8080" class="bare">http://localhost:8080</a> now serves the text "Thanks for attending this Red Hat Speed Training Event, General Motors! Congratulations on making it to the second exercise!"</p>
+<p>Verify that <a href="http://localhost:8080" class="bare">http://localhost:8080</a> now serves the text "Thanks for attending this Red Hat Speed Training Event, General Motors!" by refreshing the browser.</p>
 </li>
 </ol>
 </div>
@@ -387,7 +387,7 @@ Writing manifest to image destination
 <div class="content">
 <pre>[student@workstation]$ <strong>podman images</strong>
 REPOSITORY                             TAG          IMAGE ID         CREATED           SIZE
-localhost/speedtraining-httpd          latest                        1 minute ago</pre>
+localhost/speedtraining-httpd          latest       46c8ecb0bbf5     1 minute ago</pre>
 </div>
 </div>
 </div>
@@ -417,7 +417,7 @@ httpd</pre>
 </div>
 </li>
 <li>
-<p>Verify that no page is responding at <a href="https://localhost:8080" class="bare">https://localhost:8080</a></p>
+<p>Verify that no page is responding at <a href="https://localhost:8080" class="bare">https://localhost:8080</a> by refreshing the browser.</p>
 </li>
 <li>
 <p>Use podman run to start a container using the newly created image</p>
@@ -425,7 +425,7 @@ httpd</pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman run - -name=httpdnew -d -it -p 8080:80 localhost/speedtraining-httpd</strong>
+<pre>[student@workstation]$ <strong>podman run --name=httpdnew -d -it -p 8080:80 localhost/speedtraining-httpd:latest</strong>
 649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527</pre>
 </div>
 </div>

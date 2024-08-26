@@ -232,7 +232,7 @@ registry.lab.example.com/ubi9/ubi  latest      8d2a8803cfca  3 months ago  219 M
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation ~]$ <strong>podman run --rm registry.lab.example.com/ubi9/ubi \
+<pre>[student@workstation ~]$ <strong>podman run --rm registry.lab.example.com/ubi9/ubi
  echo 'Hello General Motors'</strong>
 Hello General Motors</pre>
 </div>
@@ -339,7 +339,7 @@ a42923e05589d2d10c25e87736bc3b9537c38c2a6a87f37e9a71e288b01738a6</pre>
 </div>
 </li>
 <li>
-<p>In a web browser, navigate to <code>http://localhost:8080</code>. Verify that the HTTP server is running at the 8080 port.</p>
+<p>In a web browser, navigate to <code>http://localhost:8080</code>. Verify that the HTTP server is running at the 8080 port (if you see a Red Hat Enterprise Linux Test Page, you have done it correctly).</p>
 </li>
 <li>
 <p>Go back to your command-line terminal. Press <code>Ctrl+C</code> to stop the container.</p>
@@ -356,12 +356,12 @@ a42923e05589d2d10c25e87736bc3b9537c38c2a6a87f37e9a71e288b01738a6</pre>
 </div>
 </li>
 <li>
-<p>Create the container again by adding the <code>-d</code> option. The container runs in the background.</p>
+<p>Create another container, this time by adding the <code>-d</code> option. The container runs in the background.</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation ~]$ <strong>podman run --name=httpd -d \
+<pre>[student@workstation ~]$ <strong>podman run --name=httpd2 -d \
  -p 8080:8080 registry.lab.example.com/rhel9/httpd-24</strong>
 08ac7ce948feb65f76f82305d556843a898b60200f5b4f37d1ecb8ea381199ff</pre>
 </div>

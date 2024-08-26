@@ -68,7 +68,7 @@ registry.lab.example.com/ubi9/ubi  latest      8d2a8803cfca  3 months ago  219 M
 --
 [subs="+quotes,+macros"]
 ----
-[student@workstation ~]$ *podman run --rm registry.lab.example.com/ubi9/ubi \
+[student@workstation ~]$ *podman run --rm registry.lab.example.com/ubi9/ubi 
  echo 'Hello General Motors'*
 Hello General Motors
 ----
@@ -138,7 +138,7 @@ a42923e05589d2d10c25e87736bc3b9537c38c2a6a87f37e9a71e288b01738a6
 
 The container keeps running and the logs are displayed in your terminal.
 --
-.. In a web browser, navigate to `\http://localhost:8080`. Verify that the HTTP server is running at the 8080 port.
+.. In a web browser, navigate to `\http://localhost:8080`. Verify that the HTTP server is running at the 8080 port (if you see a Red Hat Enterprise Linux Test Page, you have done it correctly). 
 .. Go back to your command-line terminal. Press `Ctrl+C` to stop the container.
 +
 --
@@ -149,12 +149,12 @@ _...output omitted..._
 [Thu Jun 06 00:04:13.467695 2024] [mpm_event:notice] [pid 1:tid 1] AH00491: caught SIGTERM, shutting down
 ----
 --
-.. Create the container again by adding the `-d` option. The container runs in the background.
+.. Create another container, this time by adding the `-d` option. The container runs in the background.
 +
 --
 [subs="+quotes,+macros"]
 ----
-[student@workstation ~]$ *podman run --name=httpd -d \
+[student@workstation ~]$ *podman run --name=httpd2 -d \
  -p 8080:8080 registry.lab.example.com/rhel9/httpd-24*
 08ac7ce948feb65f76f82305d556843a898b60200f5b4f37d1ecb8ea381199ff
 ----

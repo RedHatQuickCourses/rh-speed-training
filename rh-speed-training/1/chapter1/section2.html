@@ -158,7 +158,7 @@
 <h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To execute this section, you will need a GitHub account. It can be either a personal or a work account. If you do not already have a GitHub account, navigate to <a href="https://github.com/signup" class="bare">https://github.com/signup</a> and follow the steps on that interactive page!</p>
+<p>To execute this section, you will need a GitHub account with SSH access enabled to the lab machine. It can be either a personal or a work account. If you do not already have a GitHub account, navigate to <a href="https://github.com/signup" class="bare">https://github.com/signup</a> and follow the steps on that interactive page!</p>
 </div>
 <div class="paragraph">
 <p>Log in to your GitHub account and cache your credentials. Configure your git identity at the user level in your machine.</p>
@@ -219,6 +219,133 @@ user.email=your@user.email</pre>
 </div>
 </div>
 </div>
+<div class="paragraph">
+<p>To connect to your GitHub account using SSH, we need to follow a few set up steps. Similar steps can be found on the GitHub Docs page titled "Generating a new SSH key and adding it to the ssh-agent"</p>
+</div>
+<div class="paragraph">
+<p>First we need to generate a new SSH key on the lab machine. Navigate to the terminal window and enter the following command:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>ssh-keygen -t ed25519 -C "your@user.email"</strong></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You will be prompted to enter a file location as well as a passphrase. In all of these steps, hit <strong>Enter</strong> on your keyboard without entering any information (i.e. leave it all blank).</p>
+</div>
+<div class="paragraph">
+<p>Start the ssh-agent in the background:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>eval "$(ssh-agent -s)"</strong>
+&gt;Agent pid 12345</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The "pid" will vary depending on your machine.</p>
+</div>
+<div class="paragraph">
+<p>Add your SSH private key to the ssh-agent:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>ssh-add ~/.ssh/id_ed25519</strong></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Next we need to add the SSH key we just created to your GitHub account. First, copy the SSH public key to your clipboard:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>cat ~/.ssh/id_ed25519.pub</strong>
+ssh-ed25519 HASH your@user.email</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Copy the contents displayed by selecting them in the terminal, right clicking, and selecting "Copy"</p>
+</div>
+<div class="paragraph">
+<p>Switch to a browser and go to <a href="https://github.com" class="bare">https://github.com</a> and make sure you are logged in. In the upper-right corner click your profile photo and then click the <strong>Settings</strong> option near the bottom of the menu.</p>
+</div>
+<div class="paragraph">
+<p>In the <strong>Access</strong> section of the sidebar, select <strong>SSH and GPG keys</strong></p>
+</div>
+<div class="paragraph">
+<p>Click <strong>New SSH key</strong></p>
+</div>
+<div class="paragraph">
+<p>In the <strong>Title</strong> field, write "RH Speed Training Key" and leave the <strong>Key Type</strong> as "Authentication Key"</p>
+</div>
+<div class="paragraph">
+<p>In the <strong>Key</strong> text area, paste the contents of your clipboard using right click, and selecting "Paste"</p>
+</div>
+<div class="paragraph">
+<p>Click <strong>Add SSH key</strong></p>
+</div>
+<div class="paragraph">
+<p>To test your connection, go back to your terminal window and enter the following:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>ssh -T git@github.com</strong>
+Warning: Permanently added ...
+Hi USERNAME! You've successfully authenticated, but GitHub does not provide shell access.</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>If you receive an error "ssh: connect to host github.com port 22: Connectoin refused&#8230;&#8203;" it means we have to edit a configuration file. The quick fix is to append the following to the .ssh/config file:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>Host github.com
+ Hostname ssh.github.com
+ Port 443</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Edit the file using the instructions below, or in the manner of your choosing:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation]$ <strong>sudo vim ~/.ssh/config</strong>
+[sudo] password for student: <strong>student</strong></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Be sure to just add the new information at the end of the existing file, and then save your work.</p>
+</div>
+<div class="paragraph">
+<p>At this point, you are good to head into the exercise! Note that even if you only made it this far before time ran out, learning how to set up a GitHub account and link it to your machine with SSH is an incredibly valuable lesson!</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -246,16 +373,18 @@ This organization will host your simulated third-party project.</p>
 <p>Sign in with your GitHub credentials. If you do not have an account, then create one.</p>
 </li>
 <li>
-<p>Click menu:+[New organization] in the upper right of the window.</p>
+<p>Click the Menu dropdown in the upper right of the window (Looks like a + with a downward arrow next to it) and click "New Organization".</p>
 </li>
 <li>
-<p>Choose the Free plan. Click <strong>Join for free</strong>.</p>
+<p>Choose the Free plan. Click <strong>Create a free orgainzation</strong> in the column furthest to the left of the screen.</p>
 </li>
 <li>
 <p>Configure your new organization.
 Fill in the <strong>Organization account name</strong> field with the <code><em>YOUR_GITHUB_USER</em>-do400-org</code> value.
 Type your email in the <strong>Contact email</strong> field.
 Select <code>My personal account</code> as the owner.
+If asked to Verify your account, do so by solving the puzzle presented.
+Check the box to accept the Terms of Service.
 Click <strong>Next</strong>.</p>
 <div class="openblock">
 <div class="content">
@@ -269,7 +398,7 @@ Click <strong>Next</strong>.</p>
 </li>
 <li>
 <p>In the confirmation screen, click <strong>Complete setup</strong>.
-You must provide your password to complete this step.</p>
+You may have to provide your password to complete this step.</p>
 </li>
 </ol>
 </div>
@@ -283,48 +412,25 @@ The newly created repository in your organization simulates a third-party projec
 <p>In a web browser, navigate to the repository located at <code><a href="https://github.com/RedHatTraining/DO400-apps-external" class="bare">https://github.com/RedHatTraining/DO400-apps-external</a></code>.</p>
 </li>
 <li>
-<p>Click <code>Fork</code> in the upper right and select the <code><em>YOUR_GITHUB_USER</em>-do400-org</code> organization as the namespace.
+<p>Click <code>Fork</code> in the upper right and select the <code><em>YOUR_GITHUB_USER</em>-do400-org</code> organization as the namespace.</p>
+</li>
+<li>
+<p>In the dropdown, select the Organization you created in Step 1 as the "Owner" and leave the repository name as is. Then click "Create fork."
 This creates the <code><em>YOUR_GITHUB_USER</em>-do400-org/DO400-apps-external</code> repository.</p>
-<div class="openblock">
-<div class="content">
-<div class="imageblock text-center">
-<div class="content">
-<img src="_images/git-fork-org.png" alt="git fork org" width="70%">
-</div>
-</div>
-<div class="paragraph">
+</li>
+<li>
 <p>At this point, you have set up the scenario to contribute to a third-party project.
 You will treat the repository you have just created as the <em>upstream</em> repository, meaning that you will consider this repository as the third-party project you send your contributions to.</p>
-</div>
-</div>
-</div>
 </li>
 </ol>
 </div>
 </li>
 <li>
-<p>Fork the upstream repository to start contributing to the upstream project.
-Fork the <code><em>YOUR_GITHUB_USER</em>-do400-org/DO400-apps-external</code> repository to your username account and clone the forked repository located at https://github.com/YOUR_GITHUB_USER/DO400-apps-external.</p>
+<p>Start contributing to the upstream project. The repository will now be located at https://github.com/YOUR_GITHUB_USER/DO400-apps-external (You will already be on the correct landing page if you are executing this immediately after Step 2).</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>From the upstream repository main page located at https://github.com/YOUR_GITHUB_USER-do400-org/DO400-apps-external, click <code>Fork</code> and select your username as the namespace.</p>
-<div class="openblock">
-<div class="content">
-<div class="imageblock text-center">
-<div class="content">
-<img src="_images/git-fork-org-to-user.png" alt="git fork org to user" width="90%">
-</div>
-</div>
-<div class="paragraph">
-<p>The new fork is located at https://github.com/YOUR_GITHUB_USER/DO400-apps-external.
-In this exercise, you will contribute to the upstream by sending pull requests from this fork to the organization upstream repository.</p>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Click the <strong>Code</strong> button and copy the HTTPS URL.</p>
+<p>Click the <strong>Code</strong> dropdown and toggle to the SSH option. Then copy the contents of the command (it will start with <a href="mailto:git@github.com">git@github.com</a>)</p>
 </li>
 <li>
 <p>Switch to the command line and navigate to your workspace folder.</p>
@@ -339,16 +445,12 @@ In this exercise, you will contribute to the upstream by sending pull requests f
 </div>
 </li>
 <li>
-<p>Clone the repository by using the <code>git clone</code> command and the copied URL.
-Enter your GitHub username and personal access token when prompted.</p>
+<p>Clone the repository by using the <code>git clone</code> command and the copied details.</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>git clone \
-https://github.com/<em>YOUR_GITHUB_USER</em>/DO400-apps-external</strong>
-Username for 'https://github.com': <em>YOUR_GITHUB_USER</em>
-Password for 'https://your_github_user@github.com': <em>YOUR_GITHUB_PERSONAL_ACCESS_TOKEN</em>
+<pre>[student@workstation]$ <strong>git clone git@github.com:USER/DO400-apps-external.git</strong>
 Cloning into 'DO400-apps-external'...
 remote: Enumerating objects: 151, done.
 remote: Total 151 (delta 0), reused 0 (delta 0), pack-reused 151
@@ -415,7 +517,7 @@ You can change the folder by adding the folder name as a parameter of the <code>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>If Git shows the output by using a pager, press kbd:[q] to quit the pager.</p>
+<p>If Git shows the output by using a pager, press <strong>q</strong> to quit the pager.</p>
 </div>
 </td>
 </tr>
@@ -436,8 +538,6 @@ If prompted, enter your GitHub username and personal access token.</p>
 <div class="listingblock">
 <div class="content">
 <pre>[student@workstation DO400-apps-external]$ <strong>git push origin --tags</strong>
-Username for 'https://github.com': <em>YOUR_GITHUB_USER</em>
-Password for 'https://your_github_user@github.com': <em>YOUR_GITHUB_PERSONAL_ACCESS_TOKEN</em>
 Total 0 (delta 0), reused 0 (delta 0)
 To https://github.com/your_github_user/DO400-apps-external.git
  * [new tag]         1.0.0 -&gt; 1.0.0</pre>
@@ -460,7 +560,7 @@ Click the <strong>Releases</strong> link in the right pane.</p>
 </div>
 </li>
 <li>
-<p>On the releases page, click btn:[Draft a new release].</p>
+<p>On the releases page, click <strong>Create a new release</strong>.</p>
 <div class="openblock">
 <div class="content">
 <div class="admonitionblock note">
@@ -485,13 +585,13 @@ Upstream owners can later create releases with your contributions.</p>
 </div>
 </li>
 <li>
-<p>Start typing <code>1.0.0</code> in the btn:[Tag version] field and select <code>1.0.0</code>.
+<p>Start typing <code>1.0.0</code> in the <strong>Tag version</strong> field and select <code>1.0.0</code>.
 This is the tag that you just created.
 Do not change the <code>Target: main</code> selector.</p>
 </li>
 <li>
-<p>Enter a value in the btn:[Release title] field.
-The btn:[Existing tag] label should appear under the tag field, confirming that you are using the <code>1.0.0</code> tag that you created.</p>
+<p>Enter a value in the <strong>Release title</strong> field.
+The <strong>Existing tag</strong> label should appear under the tag field, confirming that you are using the <code>1.0.0</code> tag that you created.</p>
 <div class="openblock">
 <div class="content">
 <div class="imageblock text-center">
@@ -500,7 +600,7 @@ The btn:[Existing tag] label should appear under the tag field, confirming that 
 </div>
 </div>
 <div class="paragraph">
-<p>Finally, click btn:[Publish release] to create the release.
+<p>Finally, click <strong>Publish release</strong> to create the release.
 This takes you to the newly created release page.</p>
 </div>
 </div>
@@ -617,7 +717,7 @@ Next, click the <strong>Create pull request</strong> button to open the pull req
 </div>
 </li>
 <li>
-<p>In the pull request creation form, click btn:[Create pull request] to submit the form and open the pull request.</p>
+<p>In the pull request creation form, click <strong>Create pull request</strong> to submit the form and open the pull request.</p>
 <div class="openblock">
 <div class="content">
 <div class="admonitionblock note">
@@ -731,190 +831,11 @@ This is because you merged the pull request to the <strong>upstream</strong> rep
 </div>
 </li>
 <li>
-<p>Configure and pull from the <code>upstream</code> remote.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>In the web browser, navigate to the main page of your organization upstream repository, located at: https://github.com/YOUR_GITHUB_USER-do400-org/DO400-apps-external.
-Click the <strong>Code</strong> button and copy the HTTPS URL.</p>
-</li>
-<li>
-<p>Configure a new remote called <code>upstream</code> to point to your organization repository:</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation DO400-apps-external]$ <strong>git remote add upstream \
-https://github.com/<em>YOUR_GITHUB_USER</em>-do400-org/DO400-apps-external.git</strong></pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Pull from the <code>upstream</code> remote by using <code>git pull upstream main -p</code>.
-Enter your GitHub username and password if prompted.</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation DO400-apps-external]$ <strong>git pull upstream main</strong>
-<em>...output omitted...</em>
-remote: Enumerating objects: 1, done.
-remote: Counting objects: 100% (1/1), done.
-remote: Total 1 (delta 0), reused 0 (delta 0), pack-reused 0
-Unpacking objects: 100% (1/1), done.
-From https://github.com/your_github_user-do400-org/DO400-apps-external
- * branch            main     -&gt; FETCH_HEAD
- * [new branch]      main     -&gt; upstream/main
-Updating 6459e50..d4492a5
-Fast-forward
- hello/hellorh.py | 1 +
- 1 file changed, 1 insertion(+)
- create mode 100644 hello/hellorh.py</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Run <code>git log</code> to see the local <code>main</code> branch has been updated:</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation DO400-apps-external]$ <strong>git log</strong>
-commit d4492a5546f3088af378ef287dd272970ac3eb5d (HEAD -&gt; <code>main</code>, <code>upstream/main</code>)
-Merge: 6459e50 60db2e8
-Author: Your User Name &lt;your.email@example.com&gt;
-Date:   Thu Oct 1 12:54:59 2020 +0200
-
-    Merge pull request #1 from your_github_user/hello-redhat
-
-    added hello Red Hat
-
-commit 60db2e8b62bad2320e66aa94e147c66aefc71139 (origin/hello-redhat, hello-redhat)
-Author: Your User Name &lt;your.email@example.com&gt;
-Date:   Thu Oct 1 12:38:01 2020 +0200
-
-    added hello Red Hat
-
-<em>...output omitted...</em></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Notice how both the local and the upstream <code>main</code> branches point to the same commit.</p>
-</div>
-</div>
-</div>
+<p>Clean up your local files and the remote repositories and organization.
+Remove your local <code>DO400-apps-external</code> folder</p>
 </li>
 </ol>
 </div>
-</li>
-<li>
-<p>Create a new release from GitHub.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Push the changes on <code>main</code> to the forked repository with <code>git push origin main</code>.
-Enter your GitHub username and password if prompted.</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation DO400-apps-external]$ <strong>git push origin main</strong>
-<em>...output omitted...</em>
-Total 0 (delta 0), reused 0 (delta 0)
-To https://github.com/your_github_user/DO400-apps-external.git
-   6459e50..d4492a5  main -&gt; main</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Refresh the GitHub page for your username fork located at https://github.com/YOUR_GITHUB_USER/DO400-apps-external.
-You should see the latest commit and changes.</p>
-</li>
-<li>
-<p>Click btn:[Releases] on the right.</p>
-</li>
-<li>
-<p>On the releases page, click btn:[Draft a new release].</p>
-<div class="openblock">
-<div class="content">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Normally you should not create releases in a forked repository.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Enter <code>2.0.0</code> in the <strong>Tag version</strong> field and enter a value in the <strong>Release title</strong> field.</p>
-</li>
-<li>
-<p>Click <strong>Publish release</strong> to create the release.
-You are taken to your release&#8217;s page.</p>
-</li>
-<li>
-<p>On the command line, run <code>git pull --tags</code>.
-Enter your GitHub username and password if prompted.</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation DO400-apps-external]$ <strong>git pull --tags</strong>
-<em>...output omitted...</em>
-From https://github.com/your_github_user/DO400-apps-external
- * <code>[new tag]         2.0.0      -&gt; 2.0.0</code>
-Already up to date.</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Run <code>git log</code> to see your updated changes on <code>main</code> and the new <code>2.0.0</code> tag:</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation DO400-apps-external]$ <strong>git log</strong>
-commit d4492a5546f3088af378ef287dd272970ac3eb5d (HEAD -&gt; main, <code>tag: 2.0.0</code>, upstream/main, origin/main, origin/HEAD)
-Merge: 6459e50 60db2e8
-Author: Your User Name &lt;your.email@example.com&gt;
-Date:   Thu Oct 1 12:54:59 2020 +0200
-
-    Merge pull request #1 from your_github_user/hello-redhat
-
-    added hello Red Hat
-
-<em>...output omitted...</em></pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Clean up your local files and the remote repositories and organization.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Remove your local <code>DO400-apps-external</code> folder</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
@@ -923,23 +844,13 @@ Date:   Thu Oct 1 12:54:59 2020 +0200
 [student@workstation]$ <strong>rm -rf DO400-apps-external</strong></pre>
 </div>
 </div>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
+<div class="paragraph">
 <p>Remove the downstream and upstream repositories.</p>
-</li>
-</ol>
 </div>
 </div>
 </div>
 <div class="paragraph">
 <p>Go to your GitHub repository settings page at https://github.com/YOUR_GITHUB_USER/DO400-apps-external/settings.</p>
-</div>
-</li>
-</ol>
-</div>
-</li>
-</ol>
 </div>
 <div class="paragraph">
 <p>Scroll to the <code>Danger Zone</code> at the bottom and click <strong>Delete this repository</strong>.</p>
@@ -953,12 +864,8 @@ If requested, type your password to confirm your identity.</p>
 </div>
 <div class="openblock">
 <div class="content">
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
+<div class="paragraph">
 <p>Remove the organization.</p>
-</li>
-</ol>
 </div>
 </div>
 </div>

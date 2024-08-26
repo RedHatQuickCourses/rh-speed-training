@@ -8,7 +8,7 @@ Most of this exercise was taken from our Red Hat DevOps Pipelines and Processes:
 Explore setting up a GitHub account and interacting with a remote repository from the command line. You should be able to create tags, publish releases, and use forks to contribute to other repositories.
 
 == Prerequisites
-To execute this section, you will need a GitHub account. It can be either a personal or a work account. If you do not already have a GitHub account, navigate to https://github.com/signup and follow the steps on that interactive page!
+To execute this section, you will need a GitHub account with SSH access enabled to the lab machine. It can be either a personal or a work account. If you do not already have a GitHub account, navigate to https://github.com/signup and follow the steps on that interactive page!
 
 Log in to your GitHub account and cache your credentials. Configure your git identity at the user level in your machine.
 
@@ -45,6 +45,91 @@ user.email=your@user.email
 ----
 --
 
+To connect to your GitHub account using SSH, we need to follow a few set up steps. Similar steps can be found on the GitHub Docs page titled "Generating a new SSH key and adding it to the ssh-agent"
+
+First we need to generate a new SSH key on the lab machine. Navigate to the terminal window and enter the following command:
+--
+[subs=+quotes]
+----
+[student@workstation]$ *ssh-keygen -t ed25519 -C "your@user.email"*
+----
+--
+You will be prompted to enter a file location as well as a passphrase. In all of these steps, hit *Enter* on your keyboard without entering any information (i.e. leave it all blank).
+
+Start the ssh-agent in the background:
+--
+[subs=+quotes]
+----
+[student@workstation]$ *eval "$(ssh-agent -s)"*
+>Agent pid 12345
+----
+--
+The "pid" will vary depending on your machine.
+
+Add your SSH private key to the ssh-agent:
+--
+[subs=+quotes]
+----
+[student@workstation]$ *ssh-add ~/.ssh/id_ed25519*
+----
+--
+Next we need to add the SSH key we just created to your GitHub account. First, copy the SSH public key to your clipboard:
+--
+[subs=+quotes]
+----
+[student@workstation]$ *cat ~/.ssh/id_ed25519.pub*
+ssh-ed25519 HASH your@user.email
+----
+--
+Copy the contents displayed by selecting them in the terminal, right clicking, and selecting "Copy"
+
+Switch to a browser and go to https://github.com and make sure you are logged in. In the upper-right corner click your profile photo and then click the *Settings* option near the bottom of the menu.
+
+In the *Access* section of the sidebar, select *SSH and GPG keys*
+
+Click *New SSH key*
+
+In the *Title* field, write "RH Speed Training Key" and leave the *Key Type* as "Authentication Key" 
+
+In the *Key* text area, paste the contents of your clipboard using right click, and selecting "Paste"
+
+Click *Add SSH key*
+
+
+To test your connection, go back to your terminal window and enter the following:
+--
+[subs=+quotes]
+----
+[student@workstation]$ *ssh -T git@github.com*
+Warning: Permanently added ...
+Hi USERNAME! You've successfully authenticated, but GitHub does not provide shell access.
+----
+--
+
+If you receive an error "ssh: connect to host github.com port 22: Connectoin refused..." it means we have to edit a configuration file. The quick fix is to append the following to the .ssh/config file:
+--
+[subs=+quotes]
+----
+Host github.com
+ Hostname ssh.github.com
+ Port 443
+----
+--
+
+Edit the file using the instructions below, or in the manner of your choosing:
+
+--
+[subs=+quotes]
+----
+[student@workstation]$ *sudo vim ~/.ssh/config*
+[sudo] password for student: *student*
+----
+--
+
+Be sure to just add the new information at the end of the existing file, and then save your work.
+
+At this point, you are good to head into the exercise! Note that even if you only made it this far before time ran out, learning how to set up a GitHub account and link it to your machine with SSH is an incredibly valuable lesson!
+
 == Instructions
 
 
@@ -59,42 +144,33 @@ With the organization set up as a hypothetical third-party project, you will pra
 This organization will host your simulated third-party project.
 .. Open a web browser and navigate to `https://github.com`.
 .. Sign in with your GitHub credentials. If you do not have an account, then create one.
-.. Click menu:+[New organization] in the upper right of the window.
-.. Choose the Free plan. Click *Join for free*.
+.. Click the Menu dropdown in the upper right of the window (Looks like a + with a downward arrow next to it) and click "New Organization".
+.. Choose the Free plan. Click *Create a free orgainzation* in the column furthest to the left of the screen.
 .. Configure your new organization.
 Fill in the *Organization account name* field with the `_YOUR_GITHUB_USER_-do400-org` value.
 Type your email in the *Contact email* field.
 Select `My personal account` as the owner.
+If asked to Verify your account, do so by solving the puzzle presented.
+Check the box to accept the Terms of Service.
 Click *Next*.
 +
 --
 image::release-organization-form.png[align="center",width="100%"]
 --
 .. In the confirmation screen, click *Complete setup*.
-You must provide your password to complete this step.
+You may have to provide your password to complete this step.
 2. Create a repository in your organization by forking the `DO400-apps-external` repository.
 The newly created repository in your organization simulates a third-party project in which to contribute.
 .. In a web browser, navigate to the repository located at `https://github.com/RedHatTraining/DO400-apps-external`.
 .. Click `Fork` in the upper right and select the `_YOUR_GITHUB_USER_-do400-org` organization as the namespace.
+.. In the dropdown, select the Organization you created in Step 1 as the "Owner" and leave the repository name as is. Then click "Create fork."
 This creates the `_YOUR_GITHUB_USER_-do400-org/DO400-apps-external` repository.
-+
---
-image::git-fork-org.png[align="center",width="70%"]
-
-At this point, you have set up the scenario to contribute to a third-party project.
+.. At this point, you have set up the scenario to contribute to a third-party project.
 You will treat the repository you have just created as the _upstream_ repository, meaning that you will consider this repository as the third-party project you send your contributions to.
---
-3. Fork the upstream repository to start contributing to the upstream project.
-Fork the `_YOUR_GITHUB_USER_-do400-org/DO400-apps-external` repository to your username account and clone the forked repository located at \https://github.com/YOUR_GITHUB_USER/DO400-apps-external.
-.. From the upstream repository main page located at \https://github.com/YOUR_GITHUB_USER-do400-org/DO400-apps-external, click `Fork` and select your username as the namespace.
-+
---
-image::git-fork-org-to-user.png[align="center",width="90%"]
 
-The new fork is located at \https://github.com/YOUR_GITHUB_USER/DO400-apps-external.
-In this exercise, you will contribute to the upstream by sending pull requests from this fork to the organization upstream repository.
---
-.. Click the *Code* button and copy the HTTPS URL.
+3. Start contributing to the upstream project. The repository will now be located at \https://github.com/YOUR_GITHUB_USER/DO400-apps-external (You will already be on the correct landing page if you are executing this immediately after Step 2).
+
+.. Click the *Code* dropdown and toggle to the SSH option. Then copy the contents of the command (it will start with git@github.com)
 .. Switch to the command line and navigate to your workspace folder.
 +
 --
@@ -103,16 +179,12 @@ In this exercise, you will contribute to the upstream by sending pull requests f
 [student@workstation]$
 ----
 --
-.. Clone the repository by using the `git clone` command and the copied URL.
-Enter your GitHub username and personal access token when prompted.
+.. Clone the repository by using the `git clone` command and the copied details.
 +
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *git clone \
-https://github.com/_YOUR_GITHUB_USER_/DO400-apps-external*
-Username for 'https://github.com': _YOUR_GITHUB_USER_
-Password for 'https://your_github_user@github.com': _YOUR_GITHUB_PERSONAL_ACCESS_TOKEN_
+[student@workstation]$ *git clone git@github.com:USER/DO400-apps-external.git*
 Cloning into 'DO400-apps-external'...
 remote: Enumerating objects: 151, done.
 remote: Total 151 (delta 0), reused 0 (delta 0), pack-reused 151
@@ -149,7 +221,7 @@ You can change the folder by adding the folder name as a parameter of the `git c
 
 [NOTE]
 ====
-If Git shows the output by using a pager, press kbd:[q] to quit the pager.
+If Git shows the output by using a pager, press *q* to quit the pager.
 ====
 --
 .. Use `git push origin --tags` to push the tag to your username fork on GitHub.
@@ -162,8 +234,6 @@ If prompted, enter your GitHub username and personal access token.
 [subs=+quotes]
 ----
 [student@workstation DO400-apps-external]$ *git push origin --tags*
-Username for 'https://github.com': _YOUR_GITHUB_USER_
-Password for 'https://your_github_user@github.com': _YOUR_GITHUB_PERSONAL_ACCESS_TOKEN_
 Total 0 (delta 0), reused 0 (delta 0)
 To https://github.com/your_github_user/DO400-apps-external.git
  * [new tag]         1.0.0 -> 1.0.0
@@ -175,7 +245,7 @@ Click the *Releases* link in the right pane.
 --
 image::git-releases-btn.png[align="center",width="50%"]
 --
-.. On the releases page, click btn:[Draft a new release].
+.. On the releases page, click *Create a new release*.
 +
 --
 [NOTE]
@@ -186,16 +256,16 @@ You should use forks as a tool to contribute to the upstream repository.
 Upstream owners can later create releases with your contributions.
 ====
 --
-.. Start typing `1.0.0` in the btn:[Tag version] field and select `1.0.0`.
+.. Start typing `1.0.0` in the *Tag version* field and select `1.0.0`.
 This is the tag that you just created.
 Do not change the `Target: main` selector.
-.. Enter a value in the btn:[Release title] field.
-The btn:[Existing tag] label should appear under the tag field, confirming that you are using the `1.0.0` tag that you created.
+.. Enter a value in the *Release title* field.
+The *Existing tag* label should appear under the tag field, confirming that you are using the `1.0.0` tag that you created.
 +
 --
 image::release-form.png[align="center",width="100%"]
 
-Finally, click btn:[Publish release] to create the release.
+Finally, click *Publish release* to create the release.
 This takes you to the newly created release page.
 --
 5. Create and merge a pull request from your username fork (origin) to your organization repository (upstream).
@@ -267,7 +337,7 @@ image::release-compare-branches.png[align="center",width="100%"]
 Make sure you do not select `RedHatTraining/DO400-apps-external` as the base repository.
 ====
 --
-.. In the pull request creation form, click btn:[Create pull request] to submit the form and open the pull request.
+.. In the pull request creation form, click *Create pull request* to submit the form and open the pull request.
 +
 --
 [NOTE]
@@ -330,136 +400,17 @@ _...output omitted..._
 Note how the last commit in the `main` branch is still the commit tagged as `1.0.0`.
 This is because you merged the pull request to the *upstream* repository (`_YOUR_GITHUB_USER_-do400-org/DO400-apps-external`) and not the username fork (`_YOUR_GITHUB_USER_/DO400-apps-external`).
 --
-7. Configure and pull from the `upstream` remote.
-.. In the web browser, navigate to the main page of your organization upstream repository, located at: \https://github.com/YOUR_GITHUB_USER-do400-org/DO400-apps-external.
-Click the *Code* button and copy the HTTPS URL.
-.. Configure a new remote called `upstream` to point to your organization repository:
-+
---
-[subs=+quotes]
-----
-[student@workstation DO400-apps-external]$ *git remote add upstream \
-https://github.com/_YOUR_GITHUB_USER_-do400-org/DO400-apps-external.git*
-----
---
-.. Pull from the `upstream` remote by using `git pull upstream main -p`.
-Enter your GitHub username and password if prompted.
-+
---
-[subs=+quotes]
-----
-[student@workstation DO400-apps-external]$ *git pull upstream main*
-_...output omitted..._
-remote: Enumerating objects: 1, done.
-remote: Counting objects: 100% (1/1), done.
-remote: Total 1 (delta 0), reused 0 (delta 0), pack-reused 0
-Unpacking objects: 100% (1/1), done.
-From https://github.com/your_github_user-do400-org/DO400-apps-external
- * branch            main     -> FETCH_HEAD
- * [new branch]      main     -> upstream/main
-Updating 6459e50..d4492a5
-Fast-forward
- hello/hellorh.py | 1 +
- 1 file changed, 1 insertion(+)
- create mode 100644 hello/hellorh.py
-----
---
-.. Run `git log` to see the local `main` branch has been updated:
-+
---
-[subs=+quotes]
-----
-[student@workstation DO400-apps-external]$ *git log*
-commit d4492a5546f3088af378ef287dd272970ac3eb5d (HEAD -> `main`, `upstream/main`)
-Merge: 6459e50 60db2e8
-Author: Your User Name <your.email@example.com>
-Date:   Thu Oct 1 12:54:59 2020 +0200
+7. Clean up your local files and the remote repositories and organization.
+Remove your local `DO400-apps-external` folder
 
-    Merge pull request #1 from your_github_user/hello-redhat
-
-    added hello Red Hat
-
-commit 60db2e8b62bad2320e66aa94e147c66aefc71139 (origin/hello-redhat, hello-redhat)
-Author: Your User Name <your.email@example.com>
-Date:   Thu Oct 1 12:38:01 2020 +0200
-
-    added hello Red Hat
-
-_...output omitted..._
-----
-
-Notice how both the local and the upstream `main` branches point to the same commit.
---
-8. Create a new release from GitHub.
-.. Push the changes on `main` to the forked repository with `git push origin main`.
-Enter your GitHub username and password if prompted.
-+
---
-[subs=+quotes]
-----
-[student@workstation DO400-apps-external]$ *git push origin main*
-_...output omitted..._
-Total 0 (delta 0), reused 0 (delta 0)
-To https://github.com/your_github_user/DO400-apps-external.git
-   6459e50..d4492a5  main -> main
-----
---
-.. Refresh the GitHub page for your username fork located at \https://github.com/YOUR_GITHUB_USER/DO400-apps-external.
-You should see the latest commit and changes.
-.. Click btn:[Releases] on the right.
-.. On the releases page, click btn:[Draft a new release].
-+
---
-[NOTE]
-====
-Normally you should not create releases in a forked repository.
-====
---
-.. Enter `2.0.0` in the *Tag version* field and enter a value in the *Release title* field.
-.. Click *Publish release* to create the release.
-You are taken to your release's page.
-.. On the command line, run `git pull --tags`.
-Enter your GitHub username and password if prompted.
-+
---
-[subs=+quotes]
-----
-[student@workstation DO400-apps-external]$ *git pull --tags*
-_...output omitted..._
-From https://github.com/your_github_user/DO400-apps-external
- * `[new tag]         2.0.0      -> 2.0.0`
-Already up to date.
-----
---
-9. Run `git log` to see your updated changes on `main` and the new `2.0.0` tag:
-+
---
-[subs=+quotes]
-----
-[student@workstation DO400-apps-external]$ *git log*
-commit d4492a5546f3088af378ef287dd272970ac3eb5d (HEAD -> main, `tag: 2.0.0`, upstream/main, origin/main, origin/HEAD)
-Merge: 6459e50 60db2e8
-Author: Your User Name <your.email@example.com>
-Date:   Thu Oct 1 12:54:59 2020 +0200
-
-    Merge pull request #1 from your_github_user/hello-redhat
-
-    added hello Red Hat
-
-_...output omitted..._
-----
---
-10. Clean up your local files and the remote repositories and organization.
-.. Remove your local `DO400-apps-external` folder
-+
 --
 [subs=+quotes]
 ----
 [student@workstation DO400-apps-external]$ *cd ..*
 [student@workstation]$ *rm -rf DO400-apps-external*
 ----
-.. Remove the downstream and upstream repositories.
-+
+Remove the downstream and upstream repositories.
+
 --
 Go to your GitHub repository settings page at \https://github.com/YOUR_GITHUB_USER/DO400-apps-external/settings.
 
@@ -470,8 +421,8 @@ If requested, type your password to confirm your identity.
 
 Repeat the same steps for the upstream repository at \https://github.com/YOUR_GITHUB_USER-do400-org/DO400-apps-external/settings
 --
-.. Remove the organization.
-+
+Remove the organization.
+
 --
 Enter the organization settings at \https://github.com/organizations/YOUR_GITHUB_USER-do400-org/settings/profile.
 

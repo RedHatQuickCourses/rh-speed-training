@@ -81,7 +81,7 @@ a. Use the podman run command to start the container
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *podman run - -name=httpd -d -it -p 8080:80 docker.io/library/httpd*
+[student@workstation]$ *podman run --name=httpd -d -it -p 8080:80 docker.io/library/httpd*
 649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527
 ----
 --
@@ -112,7 +112,7 @@ b. Once in the editor, click "i" on your keyboard to enable editing with INSERT 
 --
 [subs=+quotes]
 ----
-<html><body><h1>Thanks for attending this Red Hat Speed Training Event, General Motors! Congratulations on making it to the second exercise!</h1></body></html>
+<html><body><h1>Thanks for attending this Red Hat Speed Training Event, General Motors!</h1></body></html>
 ----
 --
 c. Click the ESCAPE key on your keyboard to exit INSERT mode.
@@ -122,7 +122,7 @@ d. Save and quit the editor. From within the editor type (including the colon):
 --
 [subs=+quotes]
 ----
-:q!
+:wq
 Press Enter to save and quit
 ----
 --
@@ -134,10 +134,10 @@ a. Copy the index.html file we just created into the container
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *podman cp index.html test:/usr/local/apache2/htdocs/*
+[student@workstation]$ *podman cp index.html httpd:/usr/local/apache2/htdocs/*
 ----
 --
-b. Verify that http://localhost:8080 now serves the text "Thanks for attending this Red Hat Speed Training Event, General Motors! Congratulations on making it to the second exercise!"
+b. Verify that http://localhost:8080 now serves the text "Thanks for attending this Red Hat Speed Training Event, General Motors!" by refreshing the browser.
 
 6. Now that we've customized the container to our liking, we want to save that work so we can access it later. While there are various ways to do this, today we'll do it by creating a new image based on the running container with podman.
 
@@ -162,7 +162,7 @@ b. Verify you have saved the new image by listing out all available images with 
 ----
 [student@workstation]$ *podman images*
 REPOSITORY                             TAG          IMAGE ID         CREATED           SIZE     
-localhost/speedtraining-httpd          latest                        1 minute ago    
+localhost/speedtraining-httpd          latest       46c8ecb0bbf5     1 minute ago    
 ----
 --
 
@@ -181,14 +181,14 @@ httpd
 ----
 --
 
-b. Verify that no page is responding at https://localhost:8080
+b. Verify that no page is responding at https://localhost:8080 by refreshing the browser.
 
 c. Use podman run to start a container using the newly created image
 +
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *podman run - -name=httpdnew -d -it -p 8080:80 localhost/speedtraining-httpd*
+[student@workstation]$ *podman run --name=httpdnew -d -it -p 8080:80 localhost/speedtraining-httpd:latest*
 649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527
 ----
 --

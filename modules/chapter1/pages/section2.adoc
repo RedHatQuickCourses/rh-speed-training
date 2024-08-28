@@ -2,7 +2,7 @@
 
 == Acknowledgements
 
-Most of this exercise was taken from our Red Hat DevOps Pipelines and Processes: CI/CD with Jenkins, Git, and Test-driven Development (DO400) course; credit to the Red Hat Training team that developed the course for those elements! Find more great material on using Git for all sorts of things in Chapter 2 of DO400! Stop by our Red Hat Learning Subscription booth to learn more!
+Most of this exercise was taken from our Red Hat DevOps Pipelines and Processes: CI/CD with Jenkins, Git, and Test-driven Development (DO400) course; credit to the Red Hat Training team that developed the course for those elements! Find more great material on using Git for all sorts of things in Chapter 2 of DO400! *Ask a Red Hat team member about how you can continue your learning with a Red Hat Learning Subscription or through general Red Hat Training courses!*
 
 == Goals
 Explore setting up a GitHub account and interacting with a remote repository from the command line. You should be able to create tags, publish releases, and use forks to contribute to other repositories.

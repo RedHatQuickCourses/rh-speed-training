@@ -188,7 +188,7 @@
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>git config --global user.name "<em>Your User Name</em>"</strong></pre>
+<pre>[student@workstation ~]$ <strong>git config --global user.name "<em>Your User Name</em>"</strong></pre>
 </div>
 </div>
 </div>
@@ -200,7 +200,7 @@
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>git config --global user.email <em>your@user.email</em></strong></pre>
+<pre>[student@workstation ~]$ <strong>git config --global user.email <em>your@user.email</em></strong></pre>
 </div>
 </div>
 </div>
@@ -212,7 +212,7 @@
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>git config --list</strong>
+<pre>[student@workstation ~]$ <strong>git config --list</strong>
 user.name=Your User Name
 user.email=your@user.email</pre>
 </div>
@@ -229,7 +229,7 @@ user.email=your@user.email</pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>ssh-keygen -t ed25519 -C "your@user.email"</strong></pre>
+<pre>[student@workstation ~]$ <strong>ssh-keygen -t ed25519 -C "your@user.email"</strong></pre>
 </div>
 </div>
 </div>
@@ -244,7 +244,7 @@ user.email=your@user.email</pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>eval "$(ssh-agent -s)"</strong>
+<pre>[student@workstation ~]$ <strong>eval "$(ssh-agent -s)"</strong>
 &gt;Agent pid 12345</pre>
 </div>
 </div>
@@ -260,7 +260,7 @@ user.email=your@user.email</pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>ssh-add ~/.ssh/id_ed25519</strong></pre>
+<pre>[student@workstation ~]$ <strong>ssh-add ~/.ssh/id_ed25519</strong></pre>
 </div>
 </div>
 </div>
@@ -272,7 +272,7 @@ user.email=your@user.email</pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>cat ~/.ssh/id_ed25519.pub</strong>
+<pre>[student@workstation ~]$ <strong>cat ~/.ssh/id_ed25519.pub</strong>
 ssh-ed25519 HASH your@user.email</pre>
 </div>
 </div>
@@ -306,7 +306,7 @@ ssh-ed25519 HASH your@user.email</pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>ssh -T git@github.com</strong>
+<pre>[student@workstation ~]$ <strong>ssh -T git@github.com</strong>
 Warning: Permanently added ...
 Hi USERNAME! You've successfully authenticated, but GitHub does not provide shell access.</pre>
 </div>
@@ -314,7 +314,7 @@ Hi USERNAME! You've successfully authenticated, but GitHub does not provide shel
 </div>
 </div>
 <div class="paragraph">
-<p>If you receive an error "ssh: connect to host github.com port 22: Connectoin refused&#8230;&#8203;" it means we have to edit a configuration file. The quick fix is to append the following to the .ssh/config file:</p>
+<p>If you receive an error "ssh: connect to host github.com port 22: Connection refused&#8230;&#8203;" it means we have to edit a configuration file. The quick fix is to append the following to the .ssh/config file:</p>
 </div>
 <div class="openblock">
 <div class="content">
@@ -334,7 +334,7 @@ Hi USERNAME! You've successfully authenticated, but GitHub does not provide shel
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>sudo vim ~/.ssh/config</strong>
+<pre>[student@workstation ~]$ <strong>sudo vim ~/.ssh/config</strong>
 [sudo] password for student: <strong>student</strong></pre>
 </div>
 </div>
@@ -376,7 +376,7 @@ This organization will host your simulated third-party project.</p>
 <p>Click the Menu dropdown in the upper right of the window (Looks like a + with a downward arrow next to it) and click "New Organization".</p>
 </li>
 <li>
-<p>Choose the Free plan. Click <strong>Create a free orgainzation</strong> in the column furthest to the left of the screen.</p>
+<p>Choose the Free plan. Click <strong>Create a free organization</strong> in the column furthest to the left of the screen.</p>
 </li>
 <li>
 <p>Configure your new organization.
@@ -438,7 +438,7 @@ You will treat the repository you have just created as the <em>upstream</em> rep
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$</pre>
+<pre>[student@workstation ~]$</pre>
 </div>
 </div>
 </div>
@@ -450,7 +450,7 @@ You will treat the repository you have just created as the <em>upstream</em> rep
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>git clone git@github.com:USER/DO400-apps-external.git</strong>
+<pre>[student@workstation ~]$ <strong>git clone git@github.com:USER/DO400-apps-external.git</strong>
 Cloning into 'DO400-apps-external'...
 remote: Enumerating objects: 151, done.
 remote: Total 151 (delta 0), reused 0 (delta 0), pack-reused 151
@@ -492,7 +492,7 @@ You can change the folder by adding the folder name as a parameter of the <code>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>cd DO400-apps-external</strong>
+<pre>[student@workstation ~]$ <strong>cd DO400-apps-external</strong>
 [student@workstation DO400-apps-external]$ <strong>git tag 1.0.0</strong></pre>
 </div>
 </div>

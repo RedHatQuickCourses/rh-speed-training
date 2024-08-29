@@ -20,7 +20,7 @@ Open a new terminal window on your workstation, and use the `git config` command
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *git config --global user.name "_Your User Name_"*
+[student@workstation ~]$ *git config --global user.name "_Your User Name_"*
 ----
 --
 Use the `git config` command to set up your user email.
@@ -28,7 +28,7 @@ Use the `git config` command to set up your user email.
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *git config --global user.email _your@user.email_*
+[student@workstation ~]$ *git config --global user.email _your@user.email_*
 ----
 --
 Use the `git config` command to review your identity settings.
@@ -36,7 +36,7 @@ Use the `git config` command to review your identity settings.
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *git config --list*
+[student@workstation ~]$ *git config --list*
 user.name=Your User Name
 user.email=your@user.email
 ----
@@ -52,7 +52,7 @@ user.email=your@user.email
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *mkdir hello-branches*
+[student@workstation ~]$ *mkdir hello-branches*
 ----
 --
 .. Navigate to the `hello-branches` folder and initialize a new repository.
@@ -60,8 +60,8 @@ user.email=your@user.email
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *cd hello-branches*
-[student@workstation]$ *git init .*
+[student@workstation ~]$ *cd hello-branches*
+[student@workstation hello-branches]$ *git init .*
 Initialized empty Git repository in _...output omitted..._/DO400/hello-branches/.git/
 ----
 --
@@ -517,6 +517,6 @@ Date:   Mon Sep 28 16:32:52 2020 -0400
 [subs=+quotes]
 ----
 [student@workstation hello-branches]$ cd
-[student@workstaion ]
+[student@workstaion ~]$
 ----
 --

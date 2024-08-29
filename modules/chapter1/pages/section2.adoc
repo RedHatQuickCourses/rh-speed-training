@@ -23,7 +23,7 @@ Open a new terminal window on your workstation, and use the `git config` command
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *git config --global user.name "_Your User Name_"*
+[student@workstation ~]$ *git config --global user.name "_Your User Name_"*
 ----
 --
 Use the `git config` command to set up your user email.
@@ -31,7 +31,7 @@ Use the `git config` command to set up your user email.
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *git config --global user.email _your@user.email_*
+[student@workstation ~]$ *git config --global user.email _your@user.email_*
 ----
 --
 Use the `git config` command to review your identity settings.
@@ -39,7 +39,7 @@ Use the `git config` command to review your identity settings.
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *git config --list*
+[student@workstation ~]$ *git config --list*
 user.name=Your User Name
 user.email=your@user.email
 ----
@@ -51,7 +51,7 @@ First we need to generate a new SSH key on the lab machine. Navigate to the term
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *ssh-keygen -t ed25519 -C "your@user.email"*
+[student@workstation ~]$ *ssh-keygen -t ed25519 -C "your@user.email"*
 ----
 --
 You will be prompted to enter a file location as well as a passphrase. In all of these steps, hit *Enter* on your keyboard without entering any information (i.e. leave it all blank).
@@ -60,7 +60,7 @@ Start the ssh-agent in the background:
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *eval "$(ssh-agent -s)"*
+[student@workstation ~]$ *eval "$(ssh-agent -s)"*
 >Agent pid 12345
 ----
 --
@@ -70,14 +70,14 @@ Add your SSH private key to the ssh-agent:
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *ssh-add ~/.ssh/id_ed25519*
+[student@workstation ~]$ *ssh-add ~/.ssh/id_ed25519*
 ----
 --
 Next we need to add the SSH key we just created to your GitHub account. First, copy the SSH public key to your clipboard:
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *cat ~/.ssh/id_ed25519.pub*
+[student@workstation ~]$ *cat ~/.ssh/id_ed25519.pub*
 ssh-ed25519 HASH your@user.email
 ----
 --
@@ -100,13 +100,13 @@ To test your connection, go back to your terminal window and enter the following
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *ssh -T git@github.com*
+[student@workstation ~]$ *ssh -T git@github.com*
 Warning: Permanently added ...
 Hi USERNAME! You've successfully authenticated, but GitHub does not provide shell access.
 ----
 --
 
-If you receive an error "ssh: connect to host github.com port 22: Connectoin refused..." it means we have to edit a configuration file. The quick fix is to append the following to the .ssh/config file:
+If you receive an error "ssh: connect to host github.com port 22: Connection refused..." it means we have to edit a configuration file. The quick fix is to append the following to the .ssh/config file:
 --
 [subs=+quotes]
 ----
@@ -121,7 +121,7 @@ Edit the file using the instructions below, or in the manner of your choosing:
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *sudo vim ~/.ssh/config*
+[student@workstation ~]$ *sudo vim ~/.ssh/config*
 [sudo] password for student: *student*
 ----
 --
@@ -145,7 +145,7 @@ This organization will host your simulated third-party project.
 .. Open a web browser and navigate to `https://github.com`.
 .. Sign in with your GitHub credentials. If you do not have an account, then create one.
 .. Click the Menu dropdown in the upper right of the window (Looks like a + with a downward arrow next to it) and click "New Organization".
-.. Choose the Free plan. Click *Create a free orgainzation* in the column furthest to the left of the screen.
+.. Choose the Free plan. Click *Create a free organization* in the column furthest to the left of the screen.
 .. Configure your new organization.
 Fill in the *Organization account name* field with the `_YOUR_GITHUB_USER_-do400-org` value.
 Type your email in the *Contact email* field.
@@ -176,7 +176,7 @@ You will treat the repository you have just created as the _upstream_ repository
 --
 [subs=+quotes]
 ----
-[student@workstation]$
+[student@workstation ~]$
 ----
 --
 .. Clone the repository by using the `git clone` command and the copied details.
@@ -184,7 +184,7 @@ You will treat the repository you have just created as the _upstream_ repository
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *git clone git@github.com:USER/DO400-apps-external.git*
+[student@workstation ~]$ *git clone git@github.com:USER/DO400-apps-external.git*
 Cloning into 'DO400-apps-external'...
 remote: Enumerating objects: 151, done.
 remote: Total 151 (delta 0), reused 0 (delta 0), pack-reused 151
@@ -206,7 +206,7 @@ You can change the folder by adding the folder name as a parameter of the `git c
 --
 [subs=+quotes]
 ----
-[student@workstation]$ *cd DO400-apps-external*
+[student@workstation ~]$ *cd DO400-apps-external*
 [student@workstation DO400-apps-external]$ *git tag 1.0.0*
 ----
 --

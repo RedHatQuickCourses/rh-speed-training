@@ -181,7 +181,7 @@
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman ps</strong>
+<pre>[student@workstation ~]$ <strong>podman ps</strong>
 CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES</pre>
 </div>
 </div>
@@ -194,7 +194,7 @@ CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES<
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman rm -f &lt;container name&gt;</strong>
+<pre>[student@workstation ~]$ <strong>podman rm -f &lt;container name&gt;</strong>
 CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES</pre>
 </div>
 </div>
@@ -214,7 +214,7 @@ CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES<
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman pull docker.io/library/httpd</strong>
+<pre>[student@workstation ~]$ <strong>podman pull docker.io/library/httpd</strong>
 Trying to pull docker.io/library/httpd:latest...
 ...output omitted...
 Copying blob 358ca3c2eaff done
@@ -233,7 +233,7 @@ a42923e05589d2d10c25e87736bc3b9537c38c2a6a87f37e9a71e288b01738a6</pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman images</strong>
+<pre>[student@workstation ~]$ <strong>podman images</strong>
 REPOSITORY                       TAG          IMAGE ID         CREATED           SIZE
 docker.io/library/httpd          latest                        1 minute ago</pre>
 </div>
@@ -259,16 +259,16 @@ docker.io/library/httpd          latest                        1 minute ago</pre
 </div>
 </li>
 <li>
-<p>Let&#8217;s put this new image to the test! Using a simple podman run command, start the container and verify that it works.</p>
+<p>Let&#8217;s put this new image to the test! Using a simple <code>podman run</code> command, start the container and verify that it works.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Use the podman run command to start the container</p>
+<p>Use the <code>podman run</code> command to start the container</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman run --name=httpd -d -it -p 8080:80 docker.io/library/httpd</strong>
+<pre>[student@workstation ~]$ <strong>podman run --name=httpd -d -it -p 8080:80 docker.io/library/httpd</strong>
 649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527</pre>
 </div>
 </div>
@@ -281,7 +281,7 @@ docker.io/library/httpd          latest                        1 minute ago</pre
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman ps -a</strong>
+<pre>[student@workstation ~]$ <strong>podman ps -a</strong>
 CONTAINER ID      IMAGE                     COMMAND     CREATED           STATUS              NAMES
 649f023ae36d      docker.io/library/httpd   /bin/...    14 seconds ago    Up 13 seconds       httpd</pre>
 </div>
@@ -343,16 +343,16 @@ Press Enter to save and quit</pre>
 </div>
 </li>
 <li>
-<p>Now we need to replace the index.html file in the container with the file we just created. To do that, we&#8217;ll make use of the podman cp command to copy a file into the container.</p>
+<p>Now we need to replace the <code>index.html</code> file in the container with the file we just created. To do that, we&#8217;ll make use of the podman cp command to copy a file into the container.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Copy the index.html file we just created into the container</p>
+<p>Copy the <code>index.html</code> file we just created into the container</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman cp index.html httpd:/usr/local/apache2/htdocs/</strong></pre>
+<pre>[student@workstation ~]$ <strong>podman cp index.html httpd:/usr/local/apache2/htdocs/</strong></pre>
 </div>
 </div>
 </div>
@@ -369,12 +369,12 @@ Press Enter to save and quit</pre>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Create a new image based on the running container using podman commit</p>
+<p>Create a new image based on the running container using <code>podman commit</code></p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman commit httpd speedtraining-httpd</strong>
+<pre>[student@workstation ~]$ <strong>podman commit httpd speedtraining-httpd</strong>
 Getting image source signatures
 ...output omitted...
 Copying blob sha256:3618712e31962b9feac1d4e4f44841e4848d0c88c60159b9973af35cfa4f7d7f
@@ -392,7 +392,7 @@ Writing manifest to image destination
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman images</strong>
+<pre>[student@workstation ~]$ <strong>podman images</strong>
 REPOSITORY                             TAG          IMAGE ID         CREATED           SIZE
 localhost/speedtraining-httpd          latest       46c8ecb0bbf5     1 minute ago</pre>
 </div>
@@ -413,10 +413,10 @@ localhost/speedtraining-httpd          latest       46c8ecb0bbf5     1 minute ag
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman stop httpd</strong>
+<pre>[student@workstation ~]$ <strong>podman stop httpd</strong>
 httpd
 
-[student@workstation]$ <strong>podman rm httpd</strong>
+[student@workstation ~]$ <strong>podman rm httpd</strong>
 httpd</pre>
 </div>
 </div>
@@ -432,7 +432,7 @@ httpd</pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman run --name=httpdnew -d -it -p 8080:80 localhost/speedtraining-httpd:latest</strong>
+<pre>[student@workstation ~]$ <strong>podman run --name=httpdnew -d -it -p 8080:80 localhost/speedtraining-httpd:latest</strong>
 649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527</pre>
 </div>
 </div>
@@ -445,7 +445,7 @@ httpd</pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation]$ <strong>podman ps -a</strong>
+<pre>[student@workstation ~]$ <strong>podman ps -a</strong>
 CONTAINER ID      IMAGE                                     COMMAND     CREATED           STATUS              NAMES
 649f023ae36d      localhost/speedtraining-httpd/httpdnew   /bin/...    14 seconds ago    Up 13 seconds       httpdnew</pre>
 </div>

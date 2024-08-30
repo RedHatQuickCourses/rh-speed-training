@@ -162,7 +162,7 @@ Save the file and exit.
 [subs="+quotes,+macros"]
 ----
 [student@workstation playbook-basic]$ *ansible-navigator run \*
-> *-m stdout site.yml --syntax-check*
+ *-m stdout site.yml --syntax-check*
 playbook: /home/student/playbook-basic/site.yml
 ----
 --
@@ -172,7 +172,7 @@ playbook: /home/student/playbook-basic/site.yml
 [subs="+quotes,+macros"]
 ----
 [student@workstation playbook-basic]$ *ansible-navigator run \*
-> *-m stdout site.yml*
+ *-m stdout site.yml*
 
 PLAY [Install and start Apache HTTPD] ++******************************************++
 
@@ -203,7 +203,7 @@ serverd.lab.example.com    : ok=4    changed=3    unreachable=0    failed=0    s
 [subs="+quotes,+macros"]
 ----
 [student@workstation playbook-basic]$ *ansible-navigator run \*
-> *-m stdout site.yml*
+ *-m stdout site.yml*
 
 PLAY [Install and start Apache HTTPD] ++******************************************++
 

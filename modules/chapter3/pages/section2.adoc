@@ -1,383 +1,220 @@
-= Bonus Exercise: Automate the people!
+= Bonus Exercise: Can't contain your progress!
 
 == Acknowledgements
 
-All credit for the steps in this exercise and the associated lab environment you are using go to the Red Hat Training development team! Find more fun exercises like this on Ansible in one of our many automation courses including: Linux Automation with Ansible (RH294), Network Automation with the Ansible Automation Platform (DO457), or Windows Automation with the Ansible Automation Platform (DO417). *Ask a Red Hat team member about how you can continue your learning with a Red Hat Learning Subscription or through general Red Hat Training courses!*
+All credit for the steps in this exercise and the associated lab environment you are using go to the Red Hat Training development team! Find more fun exercises like this on containers in both our Red Hat System Administration II (RH134) and OpenShift Development I: Introduction to Containers with Podman (DO188) courses! *Ask a Red Hat team member about how you can continue your learning with a Red Hat Learning Subscription or through general Red Hat Training courses!*
 
 == Goals
 
-* Create a new user group.
-* Manage users by using the `ansible.builtin.user` module.
-* Populate SSH authorized keys by using the `ansible.posix.authorized_key` module.
-* Modify the `/etc/ssh/sshd_config` file and a configuration file in `/etc/sudoers.d` by using the `ansible.builtin.lineinfile` module.
+You should be able to run containers in Podman by using the `podman run` command.
+Resist the urge to use copy and paste! We learn a lot more when we type it out the long way.
 
-== Prerequisites
+
+
+== Getting Started
 
 As the `student` user on the `workstation` machine, use the `lab` command to prepare your system for this exercise.
-
-This command prepares your environment and ensures that all required resources are available.
 
 
 [subs="+quotes,+macros"]
 ----
-[student@workstation ~]$ *lab start system-users*
+[student@workstation ~]$ *lab start containers-creating*
 ----
 
 
 [role='Checklist']
 == Instructions
 
-Your organization requires that all hosts have the same local users available. These users should belong to the `webadmin` user group, which can use the `sudo` command without specifying a password. Also, the users++'++ SSH public keys should be distributed in the environment to their `~/.ssh/authorized_keys` files to allow key-based authentication, and the `root` user should not be allowed to log in directly using SSH.
-
-Write a playbook to ensure that the users specified in the `/home/student/system-users/vars/users_vars.yml` file and the `webadmin` user group are present on the managed hosts and meet the preceding criteria.
-
-
-[]
-1. Change into the `/home/student/system-users` directory.
+1. Use the `registry.lab.example.com/ubi9/ubi` image to create a new container that prints the `Hello Red{nbsp}Hat` text.
+.. Log in to the classroom registry. Use `admin` as the username, and `redhat321` as the password.
 +
 --
 [subs="+quotes,+macros"]
 ----
-[student@workstation ~]$ *cd ~/system-users*
-[student@workstation system-users]$
+[student@workstation ~]$ *podman login registry.lab.example.com --tls-verify=false*
+Username: *admin*
+Password: *redhat321*
+Login Succeeded!
 ----
 --
-2. Examine the existing `vars/users_vars.yml` variable file.
+.. Use the `podman pull` command to fetch the image from the registry.
 +
 --
 [subs="+quotes,+macros"]
 ----
----
-users:
-  - username: user1
-    groups: webadmin
-  - username: user2
-    groups: webadmin
-  - username: user3
-    groups: webadmin
-  - username: user4
-    groups: webadmin
-  - username: user5
-    groups: webadmin
-----
-
-It uses the `username` variable name to set the correct username, and the `groups` variable to define supplementary groups that the user should belong to.
---
-3. Start writing the `/home/student/system-users/users.yml` playbook. Define a single play in the playbook that targets the `webservers` host group.
-+
---
-Add a `vars_files` clause that loads the variables in the `vars/users_vars.yml` file, which has been created for you, and which contains all the usernames that are required for this exercise.
-
-Add the `tasks` clause to the playbook.
-
-The `users.yml` playbook should consist of the following content:
-
-
-[subs="+quotes,+macros"]
-----
----
-- name: Create multiple local users
-  hosts: webservers
-  vars++_++files:
-    - vars/users++_++vars.yml
-  tasks:
+[student@workstation ~]$ *podman pull registry.lab.example.com/ubi9/ubi \
+ --tls-verify=false*
+Trying to pull registry.lab.example.com/ubi9/ubi:latest...
+...output omitted...
+Getting image source signatures
+Copying blob 1153e061da4e done
+Copying config 8d2a8803cf done
+Writing manifest to image destination
+8d2a8803cfca17a81eb9412e1f33ae1c6fe3797553e9b819899dc03f1657cf12
 ----
 --
-4. Add two tasks to the play.
-+
---
-Create the `webadmin` user group on the managed hosts by using the `ansible.builtin.group` module in the first task.
-
-Create the users specified in the `vars/users_vars.yml` file by using the `ansible.builtin.user` module to loop over those variables in the second task.
-
-Run the `users.yml` playbook.
---
-.. Add the first task to the play to ensure that the group `webadmin` exists on your managed hosts.
-+
---
-The first task should consist of the following content:
-
-
-[subs="+quotes,+macros"]
-----
-    - name: Add webadmin group
-      ansible.builtin.group:
-        name: webadmin
-        state: present
-----
---
-.. Add a second task to the play that uses the `ansible.builtin.user` module to ensure that the users exist on your managed hosts.
-+
---
-Add a `loop: "{{ users }}"` clause to the task to iterate over every user found in the `vars/users_vars.yml` file.
-
-For the `name` parameter for the users, use ``item['username']``, not ``item``. This allows each list item in the variable file to be structured as a dictionary of multiple variables that includes additional information about each user in the list, specifically which supplementary groups the user should be a member of.
-
-The entire playbook should consist of the following content:
-
-
-[subs="+quotes,+macros"]
-----
----
-- name: Create multiple local users
-  hosts: webservers
-  vars++_++files:
-    - vars/users++_++vars.yml
-  tasks:
-
-    - name: Add webadmin group
-      ansible.builtin.group:
-        name: webadmin
-        state: present
-
-    - name: Create user accounts
-      ansible.builtin.user:
-        name: "{{ item['username'] }}"
-        groups: "{{ item['groups'] }}"
-      loop: "{{ users }}"
-----
---
-.. Run the `users.yml` playbook:
+.. Use the `podman images` command to verify that the image is available locally.
 +
 --
 [subs="+quotes,+macros"]
 ----
-[student@workstation system-users]$ *ansible-navigator run \*
- *-m stdout users.yml*
-
-PLAY [Create multiple local users] ++*******************************************++
-
-TASK [Gathering Facts] ++*******************************************************++
-ok: [servera.lab.example.com]
-
-TASK [Add webadmin group] ++****************************************************++
-changed: [servera.lab.example.com]
-
-TASK [Create user accounts] ++**************************************************++
-changed: [servera.lab.example.com] => (item={'username': 'user1', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] => (item={'username': 'user2', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] => (item={'username': 'user3', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] => (item={'username': 'user4', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] => (item={'username': 'user5', 'groups': 'webadmin'})
-
-PLAY RECAP ++*******************************************************************++
-servera.lab.example.com    : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+[student@workstation ~]$ *podman images*
+REPOSITORY                         TAG         IMAGE ID      CREATED       SIZE
+registry.lab.example.com/ubi9/ubi  latest      8d2a8803cfca  3 months ago  219 MB
 ----
 --
-5. Ensure the SSH public keys have been properly distributed to the managed hosts by adding a third task to the play that uses the `ansible.posix.authorized_key` module.
-+
---
-In the `files` directory, each user has a unique SSH public key file. The module loops through the list of users, finds the appropriate key by using the `username` variable, and pushes the key to the managed host.
-
-For the `key` parameter, use the following Jinja2 expression for its value to evaluate the contents of the appropriate public key file. A lookup function is used with the `file` plug-in to read the file, and its file name is constructed using string operations.
-
-
-[subs="+quotes,+macros"]
-----
-"{{ lookup('file', 'files/'+ item['username'] + '.key.pub') }}"
-----
-
-The third task should consist of the following content:
-
-
-[subs="+quotes,+macros"]
-----
-    - name: Add authorized keys
-      ansible.posix.authorized++_++key:
-        user: "{{ item['username'] }}"
-        key: "{{ lookup('file', 'files/'+ item['username'] + '.key.pub') }}"
-      loop: "{{ users }}"
-----
---
-6. Add a fourth task to the play that uses the `ansible.builtin.lineinfile` module to modify the `sudo` configuration file and allow the `webadmin` group members to use `sudo` without a password on the managed host. Use the `validate` parameter to validate the new configuration entry.
-+
---
-The fourth task should consist of the following content:
-
-
-[subs="+quotes,+macros"]
-----
-    - name: Modify sudo config to allow webadmin users sudo without a password
-      ansible.builtin.lineinfile:
-        path: /etc/sudoers.d/webadmin
-        state: present
-        create: true
-        mode: 0440
-        line: "%webadmin ALL=(ALL) NOPASSWD: ALL"
-        validate: /usr/sbin/visudo -cf %s
-----
---
-7. Add a fifth task to ensure that the `root` user is not permitted to log in using SSH directly. Use `notify: Restart sshd` to trigger a handler to restart SSH.
-+
---
-The fifth task should consist of the following content:
-
-
-[subs="+quotes,+macros"]
-----
-    - name: Disable root login via SSH
-      ansible.builtin.lineinfile:
-        dest: /etc/ssh/sshd++_++config
-        regexp: "^PermitRootLogin"
-        line: "PermitRootLogin no"
-      notify: Restart sshd
-----
---
-8. In the first line after the location of the variable file, add a new handler definition named ``Restart sshd``.
-.. Define the `Restart sshd` handler as follows:
+.. In a command line terminal, use `podman run` to create a new container. Provide an `echo` command to be executed inside the container.
 +
 --
 [subs="+quotes,+macros"]
 ----
-__...output omitted...__
-    - vars/users++_++vars.yml
-  handlers:
-    - name: Restart sshd
-      ansible.builtin.service:
-        name: sshd
-        state: restarted
+[student@workstation ~]$ *podman run --rm registry.lab.example.com/ubi9/ubi 
+ echo 'Hello General Motors'*
+Hello General Motors
 ----
 --
-.. The `users.yml` playbook should consist of the following content:
+.. Verify that the container is not running after the execution finishes.
 +
 --
 [subs="+quotes,+macros"]
 ----
----
-- name: Create multiple local users
-  hosts: webservers
-  vars++_++files:
-    - vars/users++_++vars.yml
-  handlers:
-    - name: Restart sshd
-      ansible.builtin.service:
-        name: sshd
-        state: restarted
-
-  tasks:
-    - name: Add webadmin group
-      ansible.builtin.group:
-        name: webadmin
-        state: present
-
-    - name: Create user accounts
-      ansible.builtin.user:
-        name: "{{ item['username'] }}"
-        groups: "{{ item['groups'] }}"
-      loop: "{{ users }}"
-
-    - name: Add authorized keys
-      ansible.posix.authorized++_++key:
-        user: "{{ item['username'] }}"
-        key: "{{ lookup('file', 'files/'+ item['username'] + '.key.pub') }}"
-      loop: "{{ users }}"
-
-    - name: Modify sudo config to allow webadmin users sudo without a password
-      ansible.builtin.lineinfile:
-        path: /etc/sudoers.d/webadmin
-        state: present
-        create: true
-        mode: 0440
-        line: "%webadmin ALL=(ALL) NOPASSWD: ALL"
-        validate: /usr/sbin/visudo -cf %s
-
-    - name: Disable root login via SSH
-      ansible.builtin.lineinfile:
-        dest: /etc/ssh/sshd++_++config
-        regexp: "^PermitRootLogin"
-        line: "PermitRootLogin no"
-      notify: Restart sshd
+[student@workstation ~]$ *podman ps*
+CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
 ----
 --
-.. Run the `users.yml` playbook.
+2. Explore setting and printing environment variables by using the `registry.lab.example.com/ubi9/ubi` container image.
+.. Use the `-e` option in the `podman run` command to set environment variables. Use the `printenv` command that is packaged in the container image to print the values of the environment variables.
 +
 --
 [subs="+quotes,+macros"]
 ----
-[student@workstation system-users]$ *ansible-navigator run \*
- *-m stdout users.yml*
-
-PLAY [Create multiple local users] ++*******************************************++
-
-TASK [Gathering Facts] ++*******************************************************++
-ok: [servera.lab.example.com]
-
-TASK [Add webadmin group] ++****************************************************++
-ok: [servera.lab.example.com]
-
-TASK [Create user accounts] ++**************************************************++
-ok: [servera.lab.example.com] => (item={'username': 'user1', 'groups': 'webadmin'})
-ok: [servera.lab.example.com] => (item={'username': 'user2', 'groups': 'webadmin'})
-ok: [servera.lab.example.com] => (item={'username': 'user3', 'groups': 'webadmin'})
-ok: [servera.lab.example.com] => (item={'username': 'user4', 'groups': 'webadmin'})
-ok: [servera.lab.example.com] => (item={'username': 'user5', 'groups': 'webadmin'})
-
-TASK [Add authorized keys] ++***************************************************++
-changed: [servera.lab.example.com] => (item={'username': 'user1', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] => (item={'username': 'user2', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] => (item={'username': 'user3', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] => (item={'username': 'user4', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] => (item={'username': 'user5', 'groups': 'webadmin'})
-
-TASK [Modify sudo config to allow webadmin users sudo without a password] ++***++
-changed: [servera.lab.example.com]
-
-TASK [Disable root login via SSH] ++*******************************************++
-changed: [servera.lab.example.com]
-
-RUNNING HANDLER [Restart sshd] ++**********************************************++
-changed: [servera.lab.example.com]
-
-PLAY RECAP ++******************************************************************++
-servera.lab.example.com    : ok=7    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+[student@workstation ~]$ *podman run --rm -e GREET=Hello -e NAME='General Motors' \
+ registry.lab.example.com/ubi9/ubi printenv GREET NAME*
+Hello
+General Motors
 ----
 --
-9. Use SSH as the `user1` user and log in to the `servera` server. After logging in, use `sudo -i` command to change to the `root` user.
-.. Use SSH as the `user1` user and log in to the `servera` server.
+.. Verify that the container is not running after the execution finishes.
 +
 --
 [subs="+quotes,+macros"]
 ----
-[student@workstation system-users]$ *ssh user1@servera*
-Register this system with Red Hat Insights: insights-client --register
-Create an account or view all your systems at \https://red.ht/insights-dashboard
-
-[user1@servera ~]$
+[student@workstation ~]$ *podman ps*
+CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
 ----
 --
-.. Change to the `root` user.
+3. Use the `registry.lab.example.com/rhel9/httpd-24` image to run a new container that creates an Apache HTTP server.
+.. Use the `podman pull` command to fetch the image from the registry.
 +
 --
 [subs="+quotes,+macros"]
 ----
-[user1@servera ~]$ *sudo -i*
-[root@servera ~]#
+[student@workstation ~]$ *podman pull registry.lab.example.com/rhel9/httpd-24 \
+ --tls-verify=false*
+Trying to pull registry.lab.example.com/rhel9/httpd-24:latest...
+...output omitted...
+Copying blob 358ca3c2eaff done
+Copying blob e584cd196457 done
+Copying config a42923e055 done
+Writing manifest to image destination
+a42923e05589d2d10c25e87736bc3b9537c38c2a6a87f37e9a71e288b01738a6
 ----
 --
-.. Log out of ``servera``.
+.. Use the `podman run` command to start the `httpd` container. Use the `-p` option in the `podman run` command to redirect traffic from port `8080` on your machine to port `8080` inside the container.
 +
 --
 [subs="+quotes,+macros"]
 ----
-[root@servera ~]# *exit*
-logout
-[user1@servera ~]$ *exit*
-logout
-Connection to servera closed.
-[student@workstation system-users]$
-----
---
-10. Try to log in to `servera` as the `root` user directly. This step should fail because the SSH daemon configuration has been modified not to permit direct `root` user logins.
-.. From the `workstation` machine, use SSH as the `root` user and log in to the `servera` server.
-+
---
-[subs="+quotes,+macros"]
-----
-[student@workstation system-users]$ *ssh root@servera*
-root@servera's password: *redhat*
-Permission denied, please try again.
-root@servera's password:
+[student@workstation ~]$ *podman run --name=httpd -p 8080:8080 \
+ registry.lab.example.com/rhel9/httpd-24*
+=> sourcing 10-set-mpm.sh ...
+=> sourcing 20-copy-config.sh ...
+=> sourcing 40-ssl-certs.sh ...
+---> Generating SSL key pair for httpd...
+...output omitted...
+[Thu Jun 06 00:02:06.591391 2024] [mpm_event:notice] [pid 1:tid 1] AH00489: Apache/2.4.57 (Red Hat Enterprise Linux) OpenSSL/3.0.7 configured -- resuming normal operations
+[Thu Jun 06 00:02:06.591430 2024] [core:notice] [pid 1:tid 1] AH00094: Command line: 'httpd -D FOREGROUND'
 ----
 
-This confirms that the SSH configuration denied direct access to the system for the `root` user.
+The container keeps running and the logs are displayed in your terminal.
 --
+.. In a web browser, navigate to `\http://localhost:8080`. Verify that the HTTP server is running at the 8080 port (if you see a Red Hat Enterprise Linux Test Page, you have done it correctly). 
+.. Go back to your command-line terminal. Press `Ctrl+C` to stop the container.
++
+--
+[subs="+quotes,+macros"]
+----
+_...output omitted..._
+`^C`
+[Thu Jun 06 00:04:13.467695 2024] [mpm_event:notice] [pid 1:tid 1] AH00491: caught SIGTERM, shutting down
+----
+--
+.. Create another container, this time by adding the `-d` option. The container runs in the background.
++
+--
+[subs="+quotes,+macros"]
+----
+[student@workstation ~]$ *podman run --name=httpd2 -d \
+ -p 8080:8080 registry.lab.example.com/rhel9/httpd-24*
+08ac7ce948feb65f76f82305d556843a898b60200f5b4f37d1ecb8ea381199ff
+----
+--
+.. Verify that the container is running in the background.
++
+--
+[subs="+quotes,+macros"]
+----
+[student@workstation ~]$ *podman ps*
+CONTAINER ID  IMAGE                                           COMMAND               CREATED             STATUS             PORTS                   NAMES
+08ac7ce948fe  registry.lab.example.com/rhel9/httpd-24:latest  /usr/bin/run-http...  21 seconds ago  Up 22 seconds  0.0.0.0:8080->8080/tcp  httpd
+----
+--
+
+4. Use Podman Desktop to list images and containers.
+
+a. Open Podman Desktop.
+Click *Activities* at the upper-left corner of the top bar, and then click the *Podman Desktop* icon.
++
+image::podman-desktop-ge-podman-desktop.png[width="70%",align="center"]
+
+b. Click *Containers* in the Podman Desktop navigation panel.
+The list includes the containers that you created in the exercise.
+Verify that the Apache HTTP container is running.
++
+image::podman-desktop-ge-list-containers.png[width="95%",align="center"]
+
+c. Click *Images*.
+The list of local images displays the `ubi9/ubi` and the `rhel9/httpd-24` images.
++
+image::podman-desktop-ge-image-list.png[width="95%",align="center"]
+
+5. Use Podman Desktop to start another Apache HTTP container that maps its port to port 8090 in the workstation.
+
+a. Click the arrow [▶] of the `rhel9/httpd-24` image to run a new container based on this image.
+
+b. In the container creation form, enter the following values:
++
+[compact]
+* Container name: `desktop-test`
+* Local port for 8080/tcp: `8090`
+* Local port for 8443/tcp: `8443`
++
+image::podman-desktop-ge-create-container.png[width="90%",align="center"]
+
+c. Click *Start Container*.
++
+[NOTE]
+====
+You can safely ignore the SELinux security warning that displays at the top of the desktop.
+====
+
+d. Navigate to the containers menu and verify that the `desktop-test` container is running.
+
+e. In the `desktop-test` container, click the vertical ellipsis icon [⋮] on the right, select *Open Browser*, and then click *Yes* in the confirmation dialog box.
++
+image::podman-desktop-ge-open-browser.png[width="90%",align="center"]
+
+f. Verify that the browser can access the HTTP server at `\http://localhost:8090`.
+
+g. Return to Podman Desktop.
+In the `desktop-test` container, click the *Delete Container* icon to delete the container, and then close Podman Desktop.

@@ -1,241 +1,209 @@
-= Exercise: Automate this!
+= Exercise: Can't contain the need to get hands-on!
 
-== Acknowledgements
-
-All credit for the steps in this exercise and the associated lab environment you are using go to the Red Hat Training development team! Find more fun exercises like this on Ansible in one of our many automation courses including: Linux Automation with Ansible (RH294), Network Automation with the Ansible Automation Platform (DO457), or Windows Automation with the Ansible Automation Platform (DO417). *Ask a Red Hat team member about how you can continue your learning with a Red Hat Learning Subscription or through general Red Hat Training courses!*
+Find more fun exercises like this on containers in both our Red Hat System Administration II (RH134) and OpenShift Development I: Introduction to Containers with Podman (DO188) courses! *Ask a Red Hat team member about how you can continue your learning with a Red Hat Learning Subscription or through general Red Hat Training courses!*
 
 == Goals
 
-You should be able to write a playbook using basic YAML syntax and Ansible Playbook structure, and successfully run it with the `ansible-navigator run` command.
+Replicate the demo showed during the Lightning Talk! Pull a simple container image from a public repository and manage it with podman!
 
 
-== Prerequisites
 
-As the `student` user on the `workstation` machine, use the `lab` command to prepare your system for this exercise.
+== Getting Started
 
-This command prepares your environment and ensures that all required resources are available.
+Navigate to the terminal window as the `student` user on the `workstation` machine.
 
 
 [subs="+quotes,+macros"]
 ----
-[student@workstation ~]$ *lab start playbook-basic*
+[student@workstation ~]$ 
 ----
 
 
 [role='Checklist']
 == Instructions
 
-The `/home/student/playbook-basic` Ansible project directory has been created on the `workstation` machine for this exercise. This directory already has an `ansible.cfg` configuration file. It also has an inventory file named `inventory` that defines a `web` group, which includes the managed hosts `serverc.lab.example.com` and `serverd.lab.example.com` as members.
+1. Check to verify there are no containers are currently running.
 
-This exercise has you create a playbook named `site.yml` in the project directory. This playbook contains one play, which targets members of the `web` host group. The playbook uses tasks that run modules to ensure that the following conditions are met on the managed hosts:
-
-
-
-
-* The `httpd` package is present, using the `ansible.builtin.dnf` module.
-* The local `files/index.html` file is copied to `/var/www/html/index.html` on each managed host, using the `ansible.builtin.copy` module.
-* The `httpd` service is started and enabled, using the `ansible.builtin.service` module.
-
-You can use the `ansible-navigator doc` command to help you understand the keywords needed for each of the modules.
-
-After the playbook is written, validate its syntax and then use the `ansible-navigator run` command to run the playbook to implement the configuration.
-
-
-[]
-1. Change into the `/home/student/playbook-basic` directory.
+a. Utilize the podman ps command to check for active containers
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
-[student@workstation ~]$ *cd ~/playbook-basic*
-[student@workstation playbook-basic]$
+[student@workstation ~]$ *podman ps*
+CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
 ----
 --
-2. Create a new playbook called ``/home/student/playbook-basic/site.yml``. Start writing a play that targets the hosts in the `web` host group.
-.. Create and open ``~/playbook-basic/site.yml``. The first line of the file should be three dashes to indicate the start of the playbook.
+b. If any containers appear in this list, you may remove them with the following command
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
----
+[student@workstation ~]$ *podman rm -f <container name>*
+CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
 ----
 --
-.. The next line starts the play. It needs to start with a dash and a space before the first keyword in the play. Name the play with an arbitrary string documenting the play's purpose, using the `name` keyword.
+
+2. Pull a simple Apache image from a public repository.
+
+a. Run the podman pull command with the following variables
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
----
-- name: Install and start Apache HTTPD
+[student@workstation ~]$ *podman pull docker.io/library/httpd*
+Trying to pull docker.io/library/httpd:latest...
+...output omitted...
+Copying blob 358ca3c2eaff done
+Copying blob e584cd196457 done
+Copying config a42923e055 done
+Writing manifest to image destination
+a42923e05589d2d10c25e87736bc3b9537c38c2a6a87f37e9a71e288b01738a6
 ----
 --
-.. Add a `hosts` keyword-value pair to specify that the play run on hosts in the inventory's `web` host group. Make sure that the `hosts` keyword is indented two spaces so it aligns with the `name` keyword in the preceding line.
+b. Verify you have pulled the image by listing out all available images with the podman images command
 +
 --
-The complete `site.yml` file should consist of the following content:
-
-
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
----
-- name: Install and start Apache HTTPD
-  hosts: web
+[student@workstation ~]$ *podman images*
+REPOSITORY                       TAG          IMAGE ID         CREATED           SIZE     
+docker.io/library/httpd          latest                        1 minute ago    
 ----
 --
-3. Continue to edit the `/home/student/playbook-basic/site.yml` file, and add a `tasks` keyword and the three tasks for your play that were specified in the instructions.
-.. Add a `tasks` keyword indented by two spaces (aligned with the `hosts` keyword) to start the list of tasks. The file should now consist of the following content:
++
+[NOTE]
+====
+There might be other images available and your details in IMAGE ID, CREATED, and SIZE will not match the above. That is normal and expected. Continue with the exercise so long as you successfully pulled the docker.io/library/httpd image.
+====
+
+3. Let's put this new image to the test! Using a simple `podman run` command, start the container and verify that it works.
+
+a. Use the `podman run` command to start the container
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
----
-- name: Install and start Apache HTTPD
-  hosts: web
-  tasks:
+[student@workstation ~]$ *podman run --name=httpd -d -it -p 8080:80 docker.io/library/httpd*
+649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527
 ----
 --
-.. Add the first task. Indent by four spaces, and start the task with a dash and a space, and then give the task a name, such as ``Ensure httpd package is present``. Use the `ansible.builtin.dnf` module for this task. Indent the module keywords two more spaces; set the package name to `httpd` and the package state to ``present``. The task should consist of the following content:
+b. Verify the container is running
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
-    - name: Ensure httpd package is present
-      ansible.builtin.dnf:
-        name: httpd
-        state: present
+[student@workstation ~]$ *podman ps -a*
+CONTAINER ID      IMAGE                     COMMAND     CREATED           STATUS              NAMES
+649f023ae36d      docker.io/library/httpd   /bin/...    14 seconds ago    Up 13 seconds       httpd
 ----
 --
-.. Add the second task. Match the format of the previous task, and give the task a name, such as ``Correct index.html is present``. Use the `ansible.builtin.copy` module. Configure the module keywords to set the `src` key to `files/index.html` and the `dest` key to ``/var/www/html/index.html``. The task should consist of the following content:
+c. Open a web browser and navigate to http://localhost:8080 and verify that "It Works!" is displayed
+
+4. Let's say that you like the basics of what this website looks like (imagine it's a little more robust than a white screen with some text), but you want to change the language and save it. Let's go down that path! First, we'll need to make the change to the index.html file within the container to change the text that's displaying on the site. We can do this a few ways, but the simplist is to copy a new file into the container.
+
+a. Create a new index.html file in your home directory
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
-    - name: Correct index.html is present
-      ansible.builtin.copy:
-        src: files/index.html
-        dest: /var/www/html/index.html
+[student@workstation]$ *vim index.html*
 ----
 --
-.. Add the third task to start and enable the `httpd` service. Match the format of the previous two tasks, and give the new task a name, such as ``Ensure httpd is started``. Use the `ansible.builtin.service` module for this task. Set the `name` key of the service to ``httpd``, the `state` key to ``started``, and the `enabled` key to ``true``. The task should consist of the following content:
+b. Once in the editor, click "i" on your keyboard to enable editing with INSERT mode. Then, enter the following text (you can copy and paste this one):
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
-    - name: Ensure httpd is started
-      ansible.builtin.service:
-        name: httpd
-        state: started
-        enabled: true
+<html><body><h1>Thanks for attending this Red Hat Speed Training Event, General Motors!</h1></body></html>
 ----
 --
-.. Your entire `site.yml` Ansible Playbook should match the following example. Make sure that the indentation of your play's keywords, the list of tasks, and each task's keywords are all correct.
+c. Click the ESCAPE key on your keyboard to exit INSERT mode.
+
+d. Save and quit the editor. From within the editor type (including the colon):
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
----
-- name: Install and start Apache HTTPD
-  hosts: web
-  tasks:
-    - name: Ensure httpd package is present
-      ansible.builtin.dnf:
-        name: httpd
-        state: present
-
-    - name: Correct index.html is present
-      ansible.builtin.copy:
-        src: files/index.html
-        dest: /var/www/html/index.html
-
-    - name: Ensure httpd is started
-      ansible.builtin.service:
-        name: httpd
-        state: started
-        enabled: true
+:wq
+Press Enter to save and quit
 ----
-
-Save the file and exit.
 --
-4. Before running your playbook, run the `ansible-navigator run ++--++syntax-check` command to validate its syntax. Correct any reported errors before continuing. You should see output similar to the following:
+
+5. Now we need to replace the `index.html` file in the container with the file we just created. To do that, we'll make use of the podman cp command to copy a file into the container.
+
+a. Copy the `index.html` file we just created into the container
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
-[student@workstation playbook-basic]$ *ansible-navigator run \*
- *-m stdout site.yml --syntax-check*
-playbook: /home/student/playbook-basic/site.yml
+[student@workstation ~]$ *podman cp index.html httpd:/usr/local/apache2/htdocs/*
 ----
 --
-5. Run your playbook. Read through the output generated to ensure that all tasks completed successfully.
+b. Verify that http://localhost:8080 now serves the text "Thanks for attending this Red Hat Speed Training Event, General Motors!" by refreshing the browser.
+
+6. Now that we've customized the container to our liking, we want to save that work so we can access it later. While there are various ways to do this, today we'll do it by creating a new image based on the running container with podman.
+
+a. Create a new image based on the running container using `podman commit`
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
-[student@workstation playbook-basic]$ *ansible-navigator run \*
- *-m stdout site.yml*
-
-PLAY [Install and start Apache HTTPD] ++******************************************++
-
-TASK [Gathering Facts] ++*********************************************************++
-ok: [serverd.lab.example.com]
-ok: [serverc.lab.example.com]
-
-TASK [Ensure httpd package is present] ++************************************************++
-changed: [serverd.lab.example.com]
-changed: [serverc.lab.example.com]
-
-TASK [Correct index.html is present] ++*******************************************++
-changed: [serverd.lab.example.com]
-changed: [serverc.lab.example.com]
-
-TASK [Ensure httpd is started] ++********************************************************++
-changed: [serverd.lab.example.com]
-changed: [serverc.lab.example.com]
-
-PLAY RECAP ++*********************************************************************++
-serverc.lab.example.com    : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
-serverd.lab.example.com    : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+[student@workstation ~]$ *podman commit httpd speedtraining-httpd*
+Getting image source signatures
+...output omitted...
+Copying blob sha256:3618712e31962b9feac1d4e4f44841e4848d0c88c60159b9973af35cfa4f7d7f
+Copying config sha256:80e3bde7902fbab711b9bbc670d3667649423b0b666717cb1710088d39bb4bd6
+Writing manifest to image destination
+80e3bde7902fbab711b9bbc670d3667649423b0b666717cb1710088d39bb4bd680e3bde7902fbab711b9bbc670d3667649423b0b666717cb1710088d39bb4bd6
 ----
 --
-6. If all went well, you should be able to run the playbook a second time and see all tasks complete with no changes to the managed hosts.
+b. Verify you have saved the new image by listing out all available images with the podman images command
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
-[student@workstation playbook-basic]$ *ansible-navigator run \*
- *-m stdout site.yml*
-
-PLAY [Install and start Apache HTTPD] ++******************************************++
-
-TASK [Gathering Facts] ++*********************************************************++
-ok: [serverd.lab.example.com]
-ok: [serverc.lab.example.com]
-
-TASK [Ensure httpd package is present] ++************************************************++
-ok: [serverd.lab.example.com]
-ok: [serverc.lab.example.com]
-
-TASK [Correct index.html is present] ++*******************************************++
-ok: [serverc.lab.example.com]
-ok: [serverd.lab.example.com]
-
-TASK [Ensure httpd is started] ++********************************************************++
-ok: [serverd.lab.example.com]
-ok: [serverc.lab.example.com]
-
-PLAY RECAP ++*********************************************************************++
-serverc.lab.example.com    : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
-serverd.lab.example.com    : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+[student@workstation ~]$ *podman images*
+REPOSITORY                             TAG          IMAGE ID         CREATED           SIZE     
+localhost/speedtraining-httpd          latest       46c8ecb0bbf5     1 minute ago    
 ----
 --
-7. Use the `curl` command to verify that both `serverc.lab.example.com` and `serverd.lab.example.com` are configured as an HTTPD server.
+
+7. Let's test our work! Let's stop the container running with the old image, and start a new container with the fresh image.
+
+a. Stop and remove the old container
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
-[student@workstation playbook-basic]$ *curl serverc.lab.example.com*
-This is a test page.
-[student@workstation playbook-basic]$ *curl serverd.lab.example.com*
-This is a test page.
+[student@workstation ~]$ *podman stop httpd*
+httpd
+
+[student@workstation ~]$ *podman rm httpd*
+httpd
 ----
 --
+
+b. Verify that no page is responding at https://localhost:8080 by refreshing the browser.
+
+c. Use podman run to start a container using the newly created image
++
+--
+[subs=+quotes]
+----
+[student@workstation ~]$ *podman run --name=httpdnew -d -it -p 8080:80 localhost/speedtraining-httpd:latest*
+649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527
+----
+--
+d. Verify the container is running
++
+--
+[subs=+quotes]
+----
+[student@workstation ~]$ *podman ps -a*
+CONTAINER ID      IMAGE                                     COMMAND     CREATED           STATUS              NAMES
+649f023ae36d      localhost/speedtraining-httpd/httpdnew   /bin/...    14 seconds ago    Up 13 seconds       httpdnew
+----
+--
+e. Open a web browser and navigate to http://localhost:8080 and verify that "Thanks for attending this Red Hat Speed Training Event, General Motors! Congratulations on making it to the second exercise!" is displayed.
+
+Congratulations! You have completed the exercise!

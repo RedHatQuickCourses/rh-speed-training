@@ -1,117 +1,57 @@
-= Bonus Exercise: Can't contain your progress!
+= Bonus Exercise: Can't contain the need to get hands-on!
 
-== Acknowledgements
-
-All credit for the steps in this exercise and the associated lab environment you are using go to the Red Hat Training development team! Find more fun exercises like this on containers in both our Red Hat System Administration II (RH134) and OpenShift Development I: Introduction to Containers with Podman (DO188) courses! *Ask a Red Hat team member about how you can continue your learning with a Red Hat Learning Subscription or through general Red Hat Training courses!*
+Find more fun exercises like this on containers in both our Red Hat System Administration II (RH134) and OpenShift Development I: Introduction to Containers with Podman (DO188) courses! *Ask a Red Hat team member about how you can continue your learning with a Red Hat Learning Subscription or through general Red Hat Training courses!*
 
 == Goals
 
-You should be able to run containers in Podman by using the `podman run` command.
-Resist the urge to use copy and paste! We learn a lot more when we type it out the long way.
+Replicate the demo showed during the Lightning Talk! Pull a simple container image from a public repository and manage it with podman!
 
 
 
 == Getting Started
 
-As the `student` user on the `workstation` machine, use the `lab` command to prepare your system for this exercise.
+Navigate to the terminal window as the `student` user on the `workstation` machine.
 
 
 [subs="+quotes,+macros"]
 ----
-[student@workstation ~]$ *lab start containers-creating*
+[student@workstation ~]$ 
 ----
 
 
 [role='Checklist']
 == Instructions
 
-1. Use the `registry.lab.example.com/ubi9/ubi` image to create a new container that prints the `Hello Red{nbsp}Hat` text.
-.. Log in to the classroom registry. Use `admin` as the username, and `redhat321` as the password.
+1. Check to verify there are no containers are currently running.
+
+a. Utilize the podman ps command to check for active containers
 +
 --
-[subs="+quotes,+macros"]
-----
-[student@workstation ~]$ *podman login registry.lab.example.com --tls-verify=false*
-Username: *admin*
-Password: *redhat321*
-Login Succeeded!
-----
---
-.. Use the `podman pull` command to fetch the image from the registry.
-+
---
-[subs="+quotes,+macros"]
-----
-[student@workstation ~]$ *podman pull registry.lab.example.com/ubi9/ubi \
- --tls-verify=false*
-Trying to pull registry.lab.example.com/ubi9/ubi:latest...
-...output omitted...
-Getting image source signatures
-Copying blob 1153e061da4e done
-Copying config 8d2a8803cf done
-Writing manifest to image destination
-8d2a8803cfca17a81eb9412e1f33ae1c6fe3797553e9b819899dc03f1657cf12
-----
---
-.. Use the `podman images` command to verify that the image is available locally.
-+
---
-[subs="+quotes,+macros"]
-----
-[student@workstation ~]$ *podman images*
-REPOSITORY                         TAG         IMAGE ID      CREATED       SIZE
-registry.lab.example.com/ubi9/ubi  latest      8d2a8803cfca  3 months ago  219 MB
-----
---
-.. In a command line terminal, use `podman run` to create a new container. Provide an `echo` command to be executed inside the container.
-+
---
-[subs="+quotes,+macros"]
-----
-[student@workstation ~]$ *podman run --rm registry.lab.example.com/ubi9/ubi 
- echo 'Hello General Motors'*
-Hello General Motors
-----
---
-.. Verify that the container is not running after the execution finishes.
-+
---
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
 [student@workstation ~]$ *podman ps*
 CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
 ----
 --
-2. Explore setting and printing environment variables by using the `registry.lab.example.com/ubi9/ubi` container image.
-.. Use the `-e` option in the `podman run` command to set environment variables. Use the `printenv` command that is packaged in the container image to print the values of the environment variables.
+b. If any containers appear in this list, you may remove them with the following command
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
-[student@workstation ~]$ *podman run --rm -e GREET=Hello -e NAME='General Motors' \
- registry.lab.example.com/ubi9/ubi printenv GREET NAME*
-Hello
-General Motors
-----
---
-.. Verify that the container is not running after the execution finishes.
-+
---
-[subs="+quotes,+macros"]
-----
-[student@workstation ~]$ *podman ps*
+[student@workstation ~]$ *podman rm -f <container name>*
 CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
 ----
 --
-3. Use the `registry.lab.example.com/rhel9/httpd-24` image to run a new container that creates an Apache HTTP server.
-.. Use the `podman pull` command to fetch the image from the registry.
+
+2. Pull a simple Apache image from a public repository.
+
+a. Run the podman pull command with the following variables
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
-[student@workstation ~]$ *podman pull registry.lab.example.com/rhel9/httpd-24 \
- --tls-verify=false*
-Trying to pull registry.lab.example.com/rhel9/httpd-24:latest...
+[student@workstation ~]$ *podman pull docker.io/library/httpd*
+Trying to pull docker.io/library/httpd:latest...
 ...output omitted...
 Copying blob 358ca3c2eaff done
 Copying blob e584cd196457 done
@@ -120,101 +60,150 @@ Writing manifest to image destination
 a42923e05589d2d10c25e87736bc3b9537c38c2a6a87f37e9a71e288b01738a6
 ----
 --
-.. Use the `podman run` command to start the `httpd` container. Use the `-p` option in the `podman run` command to redirect traffic from port `8080` on your machine to port `8080` inside the container.
+b. Verify you have pulled the image by listing out all available images with the podman images command
 +
 --
-[subs="+quotes,+macros"]
+[subs=+quotes]
 ----
-[student@workstation ~]$ *podman run --name=httpd -p 8080:8080 \
- registry.lab.example.com/rhel9/httpd-24*
-=> sourcing 10-set-mpm.sh ...
-=> sourcing 20-copy-config.sh ...
-=> sourcing 40-ssl-certs.sh ...
----> Generating SSL key pair for httpd...
-...output omitted...
-[Thu Jun 06 00:02:06.591391 2024] [mpm_event:notice] [pid 1:tid 1] AH00489: Apache/2.4.57 (Red Hat Enterprise Linux) OpenSSL/3.0.7 configured -- resuming normal operations
-[Thu Jun 06 00:02:06.591430 2024] [core:notice] [pid 1:tid 1] AH00094: Command line: 'httpd -D FOREGROUND'
-----
-
-The container keeps running and the logs are displayed in your terminal.
---
-.. In a web browser, navigate to `\http://localhost:8080`. Verify that the HTTP server is running at the 8080 port (if you see a Red Hat Enterprise Linux Test Page, you have done it correctly). 
-.. Go back to your command-line terminal. Press `Ctrl+C` to stop the container.
-+
---
-[subs="+quotes,+macros"]
-----
-_...output omitted..._
-`^C`
-[Thu Jun 06 00:04:13.467695 2024] [mpm_event:notice] [pid 1:tid 1] AH00491: caught SIGTERM, shutting down
+[student@workstation ~]$ *podman images*
+REPOSITORY                       TAG          IMAGE ID         CREATED           SIZE     
+docker.io/library/httpd          latest                        1 minute ago    
 ----
 --
-.. Create another container, this time by adding the `-d` option. The container runs in the background.
-+
---
-[subs="+quotes,+macros"]
-----
-[student@workstation ~]$ *podman run --name=httpd2 -d \
- -p 8080:8080 registry.lab.example.com/rhel9/httpd-24*
-08ac7ce948feb65f76f82305d556843a898b60200f5b4f37d1ecb8ea381199ff
-----
---
-.. Verify that the container is running in the background.
-+
---
-[subs="+quotes,+macros"]
-----
-[student@workstation ~]$ *podman ps*
-CONTAINER ID  IMAGE                                           COMMAND               CREATED             STATUS             PORTS                   NAMES
-08ac7ce948fe  registry.lab.example.com/rhel9/httpd-24:latest  /usr/bin/run-http...  21 seconds ago  Up 22 seconds  0.0.0.0:8080->8080/tcp  httpd
-----
---
-
-4. Use Podman Desktop to list images and containers.
-
-a. Open Podman Desktop.
-Click *Activities* at the upper-left corner of the top bar, and then click the *Podman Desktop* icon.
-+
-image::podman-desktop-ge-podman-desktop.png[width="70%",align="center"]
-
-b. Click *Containers* in the Podman Desktop navigation panel.
-The list includes the containers that you created in the exercise.
-Verify that the Apache HTTP container is running.
-+
-image::podman-desktop-ge-list-containers.png[width="95%",align="center"]
-
-c. Click *Images*.
-The list of local images displays the `ubi9/ubi` and the `rhel9/httpd-24` images.
-+
-image::podman-desktop-ge-image-list.png[width="95%",align="center"]
-
-5. Use Podman Desktop to start another Apache HTTP container that maps its port to port 8090 in the workstation.
-
-a. Click the arrow [▶] of the `rhel9/httpd-24` image to run a new container based on this image.
-
-b. In the container creation form, enter the following values:
-+
-[compact]
-* Container name: `desktop-test`
-* Local port for 8080/tcp: `8090`
-* Local port for 8443/tcp: `8443`
-+
-image::podman-desktop-ge-create-container.png[width="90%",align="center"]
-
-c. Click *Start Container*.
 +
 [NOTE]
 ====
-You can safely ignore the SELinux security warning that displays at the top of the desktop.
+There might be other images available and your details in IMAGE ID, CREATED, and SIZE will not match the above. That is normal and expected. Continue with the exercise so long as you successfully pulled the docker.io/library/httpd image.
 ====
 
-d. Navigate to the containers menu and verify that the `desktop-test` container is running.
+3. Let's put this new image to the test! Using a simple `podman run` command, start the container and verify that it works.
 
-e. In the `desktop-test` container, click the vertical ellipsis icon [⋮] on the right, select *Open Browser*, and then click *Yes* in the confirmation dialog box.
+a. Use the `podman run` command to start the container
 +
-image::podman-desktop-ge-open-browser.png[width="90%",align="center"]
+--
+[subs=+quotes]
+----
+[student@workstation ~]$ *podman run --name=httpd -d -it -p 8080:80 docker.io/library/httpd*
+649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527
+----
+--
+b. Verify the container is running
++
+--
+[subs=+quotes]
+----
+[student@workstation ~]$ *podman ps -a*
+CONTAINER ID      IMAGE                     COMMAND     CREATED           STATUS              NAMES
+649f023ae36d      docker.io/library/httpd   /bin/...    14 seconds ago    Up 13 seconds       httpd
+----
+--
+c. Open a web browser and navigate to http://localhost:8080 and verify that "It Works!" is displayed
 
-f. Verify that the browser can access the HTTP server at `\http://localhost:8090`.
+4. Let's say that you like the basics of what this website looks like (imagine it's a little more robust than a white screen with some text), but you want to change the language and save it. Let's go down that path! First, we'll need to make the change to the index.html file within the container to change the text that's displaying on the site. We can do this a few ways, but the simplist is to copy a new file into the container.
 
-g. Return to Podman Desktop.
-In the `desktop-test` container, click the *Delete Container* icon to delete the container, and then close Podman Desktop.
+a. Create a new index.html file in your home directory
++
+--
+[subs=+quotes]
+----
+[student@workstation]$ *vim index.html*
+----
+--
+b. Once in the editor, click "i" on your keyboard to enable editing with INSERT mode. Then, enter the following text (you can copy and paste this one):
++
+--
+[subs=+quotes]
+----
+<html><body><h1>Thanks for attending this Red Hat Speed Training Event, General Motors!</h1></body></html>
+----
+--
+c. Click the ESCAPE key on your keyboard to exit INSERT mode.
+
+d. Save and quit the editor. From within the editor type (including the colon):
++
+--
+[subs=+quotes]
+----
+:wq
+Press Enter to save and quit
+----
+--
+
+5. Now we need to replace the `index.html` file in the container with the file we just created. To do that, we'll make use of the podman cp command to copy a file into the container.
+
+a. Copy the `index.html` file we just created into the container
++
+--
+[subs=+quotes]
+----
+[student@workstation ~]$ *podman cp index.html httpd:/usr/local/apache2/htdocs/*
+----
+--
+b. Verify that http://localhost:8080 now serves the text "Thanks for attending this Red Hat Speed Training Event, General Motors!" by refreshing the browser.
+
+6. Now that we've customized the container to our liking, we want to save that work so we can access it later. While there are various ways to do this, today we'll do it by creating a new image based on the running container with podman.
+
+a. Create a new image based on the running container using `podman commit`
++
+--
+[subs=+quotes]
+----
+[student@workstation ~]$ *podman commit httpd speedtraining-httpd*
+Getting image source signatures
+...output omitted...
+Copying blob sha256:3618712e31962b9feac1d4e4f44841e4848d0c88c60159b9973af35cfa4f7d7f
+Copying config sha256:80e3bde7902fbab711b9bbc670d3667649423b0b666717cb1710088d39bb4bd6
+Writing manifest to image destination
+80e3bde7902fbab711b9bbc670d3667649423b0b666717cb1710088d39bb4bd680e3bde7902fbab711b9bbc670d3667649423b0b666717cb1710088d39bb4bd6
+----
+--
+b. Verify you have saved the new image by listing out all available images with the podman images command
++
+--
+[subs=+quotes]
+----
+[student@workstation ~]$ *podman images*
+REPOSITORY                             TAG          IMAGE ID         CREATED           SIZE     
+localhost/speedtraining-httpd          latest       46c8ecb0bbf5     1 minute ago    
+----
+--
+
+7. Let's test our work! Let's stop the container running with the old image, and start a new container with the fresh image.
+
+a. Stop and remove the old container
++
+--
+[subs=+quotes]
+----
+[student@workstation ~]$ *podman stop httpd*
+httpd
+
+[student@workstation ~]$ *podman rm httpd*
+httpd
+----
+--
+
+b. Verify that no page is responding at https://localhost:8080 by refreshing the browser.
+
+c. Use podman run to start a container using the newly created image
++
+--
+[subs=+quotes]
+----
+[student@workstation ~]$ *podman run --name=httpdnew -d -it -p 8080:80 localhost/speedtraining-httpd:latest*
+649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527
+----
+--
+d. Verify the container is running
++
+--
+[subs=+quotes]
+----
+[student@workstation ~]$ *podman ps -a*
+CONTAINER ID      IMAGE                                     COMMAND     CREATED           STATUS              NAMES
+649f023ae36d      localhost/speedtraining-httpd/httpdnew   /bin/...    14 seconds ago    Up 13 seconds       httpdnew
+----
+--
+e. Open a web browser and navigate to http://localhost:8080 and verify that "Thanks for attending this Red Hat Speed Training Event, General Motors! Congratulations on making it to the second exercise!" is displayed.
+
+Congratulations! You have completed the exercise!

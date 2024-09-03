@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Exercise: Can&#8217;t contain the need to get hands-on! :: Red Hat Speed Training Labs</title>
+    <title>Exercise: Automate this! :: Red Hat Speed Training Labs</title>
     <link rel="prev" href="index.html">
     <link rel="next" href="section2.html">
     <meta name="generator" content="Antora 3.1.3">
@@ -63,13 +63,13 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Can&#8217;t contain their value!</a>
+    <a class="nav-link" href="index.html">Ansible Everywhere</a>
 <ul class="nav-list">
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="section1.html">Exercise: Can&#8217;t contain the need to get hands-on!</a>
+    <a class="nav-link" href="section1.html">Exercise: Automate this!</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section2.html">Bonus Exercise: Can&#8217;t contain your progress!</a>
+    <a class="nav-link" href="section2.html">Bonus Exercise: Automate the people!</a>
   </li>
 </ul>
   </li>
@@ -79,13 +79,13 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../chapter3/index.html">Ansible Everywhere</a>
+    <a class="nav-link" href="../chapter3/index.html">Can&#8217;t contain their value!</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter3/section1.html">Exercise: Automate this!</a>
+    <a class="nav-link" href="../chapter3/section1.html">Exercise: Can&#8217;t contain the need to get hands-on!</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter3/section2.html">Bonus Exercise: Automate the people!</a>
+    <a class="nav-link" href="../chapter3/section2.html">Bonus Exercise: Can&#8217;t contain your progress!</a>
   </li>
 </ul>
   </li>
@@ -127,8 +127,8 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Red Hat Speed Training Labs</a></li>
-    <li><a href="index.html">Can&#8217;t contain their value!</a></li>
-    <li><a href="section1.html">Exercise: Can&#8217;t contain the need to get hands-on!</a></li>
+    <li><a href="index.html">Ansible Everywhere</a></li>
+    <li><a href="section1.html">Exercise: Automate this!</a></li>
   </ul>
 </nav>
 </div>
@@ -137,11 +137,12 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Exercise: Can&#8217;t contain the need to get hands-on!</h1>
-<div id="preamble">
+<h1 class="page">Exercise: Automate this!</h1>
+<div class="sect1">
+<h2 id="_acknowledgements"><a class="anchor" href="#_acknowledgements"></a>Acknowledgements</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Find more fun exercises like this on containers in both our Red Hat System Administration II (RH134) and OpenShift Development I: Introduction to Containers with Podman (DO188) courses! <strong>Ask a Red Hat team member about how you can continue your learning with a Red Hat Learning Subscription or through general Red Hat Training courses!</strong></p>
+<p>All credit for the steps in this exercise and the associated lab environment you are using go to the Red Hat Training development team! Find more fun exercises like this on Ansible in one of our many automation courses including: Linux Automation with Ansible (RH294), Network Automation with the Ansible Automation Platform (DO457), or Windows Automation with the Ansible Automation Platform (DO417). <strong>Ask a Red Hat team member about how you can continue your learning with a Red Hat Learning Subscription or through general Red Hat Training courses!</strong></p>
 </div>
 </div>
 </div>
@@ -149,19 +150,22 @@
 <h2 id="_goals"><a class="anchor" href="#_goals"></a>Goals</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Replicate the demo showed during the Lightning Talk! Pull a simple container image from a public repository and manage it with podman!</p>
+<p>You should be able to write a playbook using basic YAML syntax and Ansible Playbook structure, and successfully run it with the <code>ansible-navigator run</code> command.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_getting_started"><a class="anchor" href="#_getting_started"></a>Getting Started</h2>
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Navigate to the terminal window as the <code>student</code> user on the <code>workstation</code> machine.</p>
+<p>As the <code>student</code> user on the <code>workstation</code> machine, use the <code>lab</code> command to prepare your system for this exercise.</p>
+</div>
+<div class="paragraph">
+<p>This command prepares your environment and ensures that all required resources are available.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation ~]$</pre>
+<pre>[student@workstation ~]$ <strong>lab start playbook-basic</strong></pre>
 </div>
 </div>
 </div>
@@ -169,171 +173,87 @@
 <div class="sect1 Checklist">
 <h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The <code>/home/student/playbook-basic</code> Ansible project directory has been created on the <code>workstation</code> machine for this exercise. This directory already has an <code>ansible.cfg</code> configuration file. It also has an inventory file named <code>inventory</code> that defines a <code>web</code> group, which includes the managed hosts <code>serverc.lab.example.com</code> and <code>serverd.lab.example.com</code> as members.</p>
+</div>
+<div class="paragraph">
+<p>This exercise has you create a playbook named <code>site.yml</code> in the project directory. This playbook contains one play, which targets members of the <code>web</code> host group. The playbook uses tasks that run modules to ensure that the following conditions are met on the managed hosts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>httpd</code> package is present, using the <code>ansible.builtin.dnf</code> module.</p>
+</li>
+<li>
+<p>The local <code>files/index.html</code> file is copied to <code>/var/www/html/index.html</code> on each managed host, using the <code>ansible.builtin.copy</code> module.</p>
+</li>
+<li>
+<p>The <code>httpd</code> service is started and enabled, using the <code>ansible.builtin.service</code> module.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can use the <code>ansible-navigator doc</code> command to help you understand the keywords needed for each of the modules.</p>
+</div>
+<div class="paragraph">
+<p>After the playbook is written, validate its syntax and then use the <code>ansible-navigator run</code> command to run the playbook to implement the configuration.</p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Check to verify there are no containers are currently running.</p>
+<p>Change into the <code>/home/student/playbook-basic</code> directory.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation ~]$ <strong>cd ~/playbook-basic</strong>
+[student@workstation playbook-basic]$</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Create a new playbook called <code>/home/student/playbook-basic/site.yml</code>. Start writing a play that targets the hosts in the <code>web</code> host group.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Utilize the podman ps command to check for active containers</p>
+<p>Create and open <code>~/playbook-basic/site.yml</code>. The first line of the file should be three dashes to indicate the start of the playbook.</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation ~]$ <strong>podman ps</strong>
-CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES</pre>
+<pre>---</pre>
 </div>
 </div>
 </div>
 </div>
 </li>
 <li>
-<p>If any containers appear in this list, you may remove them with the following command</p>
+<p>The next line starts the play. It needs to start with a dash and a space before the first keyword in the play. Name the play with an arbitrary string documenting the play&#8217;s purpose, using the <code>name</code> keyword.</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation ~]$ <strong>podman rm -f &lt;container name&gt;</strong>
-CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Pull a simple Apache image from a public repository.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Run the podman pull command with the following variables</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation ~]$ <strong>podman pull docker.io/library/httpd</strong>
-Trying to pull docker.io/library/httpd:latest...
-...output omitted...
-Copying blob 358ca3c2eaff done
-Copying blob e584cd196457 done
-Copying config a42923e055 done
-Writing manifest to image destination
-a42923e05589d2d10c25e87736bc3b9537c38c2a6a87f37e9a71e288b01738a6</pre>
+<pre>---
+- name: Install and start Apache HTTPD</pre>
 </div>
 </div>
 </div>
 </div>
 </li>
 <li>
-<p>Verify you have pulled the image by listing out all available images with the podman images command</p>
+<p>Add a <code>hosts</code> keyword-value pair to specify that the play run on hosts in the inventory&#8217;s <code>web</code> host group. Make sure that the <code>hosts</code> keyword is indented two spaces so it aligns with the <code>name</code> keyword in the preceding line.</p>
 <div class="openblock">
 <div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation ~]$ <strong>podman images</strong>
-REPOSITORY                       TAG          IMAGE ID         CREATED           SIZE
-docker.io/library/httpd          latest                        1 minute ago</pre>
-</div>
-</div>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
-<p>There might be other images available and your details in IMAGE ID, CREATED, and SIZE will not match the above. That is normal and expected. Continue with the exercise so long as you successfully pulled the docker.io/library/httpd image.</p>
+<p>The complete <code>site.yml</code> file should consist of the following content:</p>
 </div>
-</td>
-</tr>
-</table>
-</div>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Let&#8217;s put this new image to the test! Using a simple <code>podman run</code> command, start the container and verify that it works.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Use the <code>podman run</code> command to start the container</p>
-<div class="openblock">
-<div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation ~]$ <strong>podman run --name=httpd -d -it -p 8080:80 docker.io/library/httpd</strong>
-649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Verify the container is running</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation ~]$ <strong>podman ps -a</strong>
-CONTAINER ID      IMAGE                     COMMAND     CREATED           STATUS              NAMES
-649f023ae36d      docker.io/library/httpd   /bin/...    14 seconds ago    Up 13 seconds       httpd</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Open a web browser and navigate to <a href="http://localhost:8080" class="bare">http://localhost:8080</a> and verify that "It Works!" is displayed</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Let&#8217;s say that you like the basics of what this website looks like (imagine it&#8217;s a little more robust than a white screen with some text), but you want to change the language and save it. Let&#8217;s go down that path! First, we&#8217;ll need to make the change to the index.html file within the container to change the text that&#8217;s displaying on the site. We can do this a few ways, but the simplist is to copy a new file into the container.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Create a new index.html file in your home directory</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation]$ <strong>vim index.html</strong></pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Once in the editor, click "i" on your keyboard to enable editing with INSERT mode. Then, enter the following text (you can copy and paste this one):</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>&lt;html&gt;&lt;body&gt;&lt;h1&gt;Thanks for attending this Red Hat Speed Training Event, General Motors!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Click the ESCAPE key on your keyboard to exit INSERT mode.</p>
-</li>
-<li>
-<p>Save and quit the editor. From within the editor type (including the colon):</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>:wq
-Press Enter to save and quit</pre>
+<pre>---
+- name: Install and start Apache HTTPD
+  hosts: web</pre>
 </div>
 </div>
 </div>
@@ -343,132 +263,212 @@ Press Enter to save and quit</pre>
 </div>
 </li>
 <li>
-<p>Now we need to replace the <code>index.html</code> file in the container with the file we just created. To do that, we&#8217;ll make use of the podman cp command to copy a file into the container.</p>
+<p>Continue to edit the <code>/home/student/playbook-basic/site.yml</code> file, and add a <code>tasks</code> keyword and the three tasks for your play that were specified in the instructions.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Copy the <code>index.html</code> file we just created into the container</p>
+<p>Add a <code>tasks</code> keyword indented by two spaces (aligned with the <code>hosts</code> keyword) to start the list of tasks. The file should now consist of the following content:</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation ~]$ <strong>podman cp index.html httpd:/usr/local/apache2/htdocs/</strong></pre>
+<pre>---
+- name: Install and start Apache HTTPD
+  hosts: web
+  tasks:</pre>
 </div>
 </div>
 </div>
 </div>
 </li>
 <li>
-<p>Verify that <a href="http://localhost:8080" class="bare">http://localhost:8080</a> now serves the text "Thanks for attending this Red Hat Speed Training Event, General Motors!" by refreshing the browser.</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Now that we&#8217;ve customized the container to our liking, we want to save that work so we can access it later. While there are various ways to do this, today we&#8217;ll do it by creating a new image based on the running container with podman.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Create a new image based on the running container using <code>podman commit</code></p>
+<p>Add the first task. Indent by four spaces, and start the task with a dash and a space, and then give the task a name, such as <code>Ensure httpd package is present</code>. Use the <code>ansible.builtin.dnf</code> module for this task. Indent the module keywords two more spaces; set the package name to <code>httpd</code> and the package state to <code>present</code>. The task should consist of the following content:</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation ~]$ <strong>podman commit httpd speedtraining-httpd</strong>
-Getting image source signatures
-...output omitted...
-Copying blob sha256:3618712e31962b9feac1d4e4f44841e4848d0c88c60159b9973af35cfa4f7d7f
-Copying config sha256:80e3bde7902fbab711b9bbc670d3667649423b0b666717cb1710088d39bb4bd6
-Writing manifest to image destination
-80e3bde7902fbab711b9bbc670d3667649423b0b666717cb1710088d39bb4bd680e3bde7902fbab711b9bbc670d3667649423b0b666717cb1710088d39bb4bd6</pre>
+<pre>    - name: Ensure httpd package is present
+      ansible.builtin.dnf:
+        name: httpd
+        state: present</pre>
 </div>
 </div>
 </div>
 </div>
 </li>
 <li>
-<p>Verify you have saved the new image by listing out all available images with the podman images command</p>
+<p>Add the second task. Match the format of the previous task, and give the task a name, such as <code>Correct index.html is present</code>. Use the <code>ansible.builtin.copy</code> module. Configure the module keywords to set the <code>src</code> key to <code>files/index.html</code> and the <code>dest</code> key to <code>/var/www/html/index.html</code>. The task should consist of the following content:</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation ~]$ <strong>podman images</strong>
-REPOSITORY                             TAG          IMAGE ID         CREATED           SIZE
-localhost/speedtraining-httpd          latest       46c8ecb0bbf5     1 minute ago</pre>
+<pre>    - name: Correct index.html is present
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: /var/www/html/index.html</pre>
 </div>
 </div>
 </div>
 </div>
 </li>
-</ol>
-</div>
-</li>
 <li>
-<p>Let&#8217;s test our work! Let&#8217;s stop the container running with the old image, and start a new container with the fresh image.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Stop and remove the old container</p>
+<p>Add the third task to start and enable the <code>httpd</code> service. Match the format of the previous two tasks, and give the new task a name, such as <code>Ensure httpd is started</code>. Use the <code>ansible.builtin.service</code> module for this task. Set the <code>name</code> key of the service to <code>httpd</code>, the <code>state</code> key to <code>started</code>, and the <code>enabled</code> key to <code>true</code>. The task should consist of the following content:</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation ~]$ <strong>podman stop httpd</strong>
-httpd
+<pre>    - name: Ensure httpd is started
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Your entire <code>site.yml</code> Ansible Playbook should match the following example. Make sure that the indentation of your play&#8217;s keywords, the list of tasks, and each task&#8217;s keywords are all correct.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>---
+- name: Install and start Apache HTTPD
+  hosts: web
+  tasks:
+    - name: Ensure httpd package is present
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
 
-[student@workstation ~]$ <strong>podman rm httpd</strong>
-httpd</pre>
+    - name: Correct index.html is present
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+
+    - name: Ensure httpd is started
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true</pre>
 </div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Verify that no page is responding at <a href="https://localhost:8080" class="bare">https://localhost:8080</a> by refreshing the browser.</p>
-</li>
-<li>
-<p>Use podman run to start a container using the newly created image</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation ~]$ <strong>podman run --name=httpdnew -d -it -p 8080:80 localhost/speedtraining-httpd:latest</strong>
-649f023ae36d9fd51127c9ce8ae8ecf07dba1d93f2c9723b19441feff4cc6527</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Verify the container is running</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation ~]$ <strong>podman ps -a</strong>
-CONTAINER ID      IMAGE                                     COMMAND     CREATED           STATUS              NAMES
-649f023ae36d      localhost/speedtraining-httpd/httpdnew   /bin/...    14 seconds ago    Up 13 seconds       httpdnew</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Open a web browser and navigate to <a href="http://localhost:8080" class="bare">http://localhost:8080</a> and verify that "Thanks for attending this Red Hat Speed Training Event, General Motors! Congratulations on making it to the second exercise!" is displayed.</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
 </div>
 <div class="paragraph">
-<p>Congratulations! You have completed the exercise!</p>
+<p>Save the file and exit.</p>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Before running your playbook, run the <code>ansible-navigator run --syntax-check</code> command to validate its syntax. Correct any reported errors before continuing. You should see output similar to the following:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation playbook-basic]$ <strong>ansible-navigator run \</strong>
+ <strong>-m stdout site.yml --syntax-check</strong>
+playbook: /home/student/playbook-basic/site.yml</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Run your playbook. Read through the output generated to ensure that all tasks completed successfully.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation playbook-basic]$ <strong>ansible-navigator run \</strong>
+ <strong>-m stdout site.yml</strong>
+
+PLAY [Install and start Apache HTTPD] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [serverd.lab.example.com]
+ok: [serverc.lab.example.com]
+
+TASK [Ensure httpd package is present] ************************************************
+changed: [serverd.lab.example.com]
+changed: [serverc.lab.example.com]
+
+TASK [Correct index.html is present] *******************************************
+changed: [serverd.lab.example.com]
+changed: [serverc.lab.example.com]
+
+TASK [Ensure httpd is started] ********************************************************
+changed: [serverd.lab.example.com]
+changed: [serverc.lab.example.com]
+
+PLAY RECAP *********************************************************************
+serverc.lab.example.com    : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+serverd.lab.example.com    : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>If all went well, you should be able to run the playbook a second time and see all tasks complete with no changes to the managed hosts.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation playbook-basic]$ <strong>ansible-navigator run \</strong>
+ <strong>-m stdout site.yml</strong>
+
+PLAY [Install and start Apache HTTPD] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [serverd.lab.example.com]
+ok: [serverc.lab.example.com]
+
+TASK [Ensure httpd package is present] ************************************************
+ok: [serverd.lab.example.com]
+ok: [serverc.lab.example.com]
+
+TASK [Correct index.html is present] *******************************************
+ok: [serverc.lab.example.com]
+ok: [serverd.lab.example.com]
+
+TASK [Ensure httpd is started] ********************************************************
+ok: [serverd.lab.example.com]
+ok: [serverc.lab.example.com]
+
+PLAY RECAP *********************************************************************
+serverc.lab.example.com    : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+serverd.lab.example.com    : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Use the <code>curl</code> command to verify that both <code>serverc.lab.example.com</code> and <code>serverd.lab.example.com</code> are configured as an HTTPD server.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation playbook-basic]$ <strong>curl serverc.lab.example.com</strong>
+This is a test page.
+[student@workstation playbook-basic]$ <strong>curl serverd.lab.example.com</strong>
+This is a test page.</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="index.html">Can&#8217;t contain their value!</a></span>
-  <span class="next"><a href="section2.html">Bonus Exercise: Can&#8217;t contain your progress!</a></span>
+  <span class="prev"><a href="index.html">Ansible Everywhere</a></span>
+  <span class="next"><a href="section2.html">Bonus Exercise: Automate the people!</a></span>
 </nav>
 </article>
   </div>

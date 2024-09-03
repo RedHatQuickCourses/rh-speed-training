@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Bonus Exercise: Automate the people! :: Red Hat Speed Training Labs</title>
+    <title>Bonus Exercise: Can&#8217;t contain your progress! :: Red Hat Speed Training Labs</title>
     <link rel="prev" href="section1.html">
     <link rel="next" href="../appendix/appendix.html">
     <meta name="generator" content="Antora 3.1.3">
@@ -63,13 +63,13 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../chapter2/index.html">Can&#8217;t contain their value!</a>
+    <a class="nav-link" href="../chapter2/index.html">Ansible Everywhere</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter2/section1.html">Exercise: Can&#8217;t contain the need to get hands-on!</a>
+    <a class="nav-link" href="../chapter2/section1.html">Exercise: Automate this!</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter2/section2.html">Bonus Exercise: Can&#8217;t contain your progress!</a>
+    <a class="nav-link" href="../chapter2/section2.html">Bonus Exercise: Automate the people!</a>
   </li>
 </ul>
   </li>
@@ -79,13 +79,13 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Ansible Everywhere</a>
+    <a class="nav-link" href="index.html">Can&#8217;t contain their value!</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section1.html">Exercise: Automate this!</a>
+    <a class="nav-link" href="section1.html">Exercise: Can&#8217;t contain the need to get hands-on!</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="section2.html">Bonus Exercise: Automate the people!</a>
+    <a class="nav-link" href="section2.html">Bonus Exercise: Can&#8217;t contain your progress!</a>
   </li>
 </ul>
   </li>
@@ -127,8 +127,8 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Red Hat Speed Training Labs</a></li>
-    <li><a href="index.html">Ansible Everywhere</a></li>
-    <li><a href="section2.html">Bonus Exercise: Automate the people!</a></li>
+    <li><a href="index.html">Can&#8217;t contain their value!</a></li>
+    <li><a href="section2.html">Bonus Exercise: Can&#8217;t contain your progress!</a></li>
   </ul>
 </nav>
 </div>
@@ -137,48 +137,33 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Bonus Exercise: Automate the people!</h1>
+<h1 class="page">Bonus Exercise: Can&#8217;t contain your progress!</h1>
 <div class="sect1">
 <h2 id="_acknowledgements"><a class="anchor" href="#_acknowledgements"></a>Acknowledgements</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>All credit for the steps in this exercise and the associated lab environment you are using go to the Red Hat Training development team! Find more fun exercises like this on Ansible in one of our many automation courses including: Linux Automation with Ansible (RH294), Network Automation with the Ansible Automation Platform (DO457), or Windows Automation with the Ansible Automation Platform (DO417). <strong>Ask a Red Hat team member about how you can continue your learning with a Red Hat Learning Subscription or through general Red Hat Training courses!</strong></p>
+<p>All credit for the steps in this exercise and the associated lab environment you are using go to the Red Hat Training development team! Find more fun exercises like this on containers in both our Red Hat System Administration II (RH134) and OpenShift Development I: Introduction to Containers with Podman (DO188) courses! <strong>Ask a Red Hat team member about how you can continue your learning with a Red Hat Learning Subscription or through general Red Hat Training courses!</strong></p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_goals"><a class="anchor" href="#_goals"></a>Goals</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Create a new user group.</p>
-</li>
-<li>
-<p>Manage users by using the <code>ansible.builtin.user</code> module.</p>
-</li>
-<li>
-<p>Populate SSH authorized keys by using the <code>ansible.posix.authorized_key</code> module.</p>
-</li>
-<li>
-<p>Modify the <code>/etc/ssh/sshd_config</code> file and a configuration file in <code>/etc/sudoers.d</code> by using the <code>ansible.builtin.lineinfile</code> module.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>You should be able to run containers in Podman by using the <code>podman run</code> command.
+Resist the urge to use copy and paste! We learn a lot more when we type it out the long way.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<h2 id="_getting_started"><a class="anchor" href="#_getting_started"></a>Getting Started</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>As the <code>student</code> user on the <code>workstation</code> machine, use the <code>lab</code> command to prepare your system for this exercise.</p>
 </div>
-<div class="paragraph">
-<p>This command prepares your environment and ensures that all required resources are available.</p>
-</div>
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation ~]$ <strong>lab start system-users</strong></pre>
+<pre>[student@workstation ~]$ <strong>lab start containers-creating</strong></pre>
 </div>
 </div>
 </div>
@@ -186,177 +171,83 @@
 <div class="sect1 Checklist">
 <h2 id="_instructions"><a class="anchor" href="#_instructions"></a>Instructions</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Your organization requires that all hosts have the same local users available. These users should belong to the <code>webadmin</code> user group, which can use the <code>sudo</code> command without specifying a password. Also, the users' SSH public keys should be distributed in the environment to their <code>~/.ssh/authorized_keys</code> files to allow key-based authentication, and the <code>root</code> user should not be allowed to log in directly using SSH.</p>
-</div>
-<div class="paragraph">
-<p>Write a playbook to ensure that the users specified in the <code>/home/student/system-users/vars/users_vars.yml</code> file and the <code>webadmin</code> user group are present on the managed hosts and meet the preceding criteria.</p>
-</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Change into the <code>/home/student/system-users</code> directory.</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation ~]$ <strong>cd ~/system-users</strong>
-[student@workstation system-users]$</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Examine the existing <code>vars/users_vars.yml</code> variable file.</p>
-<div class="openblock">
-<div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>---
-users:
-  - username: user1
-    groups: webadmin
-  - username: user2
-    groups: webadmin
-  - username: user3
-    groups: webadmin
-  - username: user4
-    groups: webadmin
-  - username: user5
-    groups: webadmin</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>It uses the <code>username</code> variable name to set the correct username, and the <code>groups</code> variable to define supplementary groups that the user should belong to.</p>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Start writing the <code>/home/student/system-users/users.yml</code> playbook. Define a single play in the playbook that targets the <code>webservers</code> host group.</p>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Add a <code>vars_files</code> clause that loads the variables in the <code>vars/users_vars.yml</code> file, which has been created for you, and which contains all the usernames that are required for this exercise.</p>
-</div>
-<div class="paragraph">
-<p>Add the <code>tasks</code> clause to the playbook.</p>
-</div>
-<div class="paragraph">
-<p>The <code>users.yml</code> playbook should consist of the following content:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>---
-- name: Create multiple local users
-  hosts: webservers
-  vars_files:
-    - vars/users_vars.yml
-  tasks:</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Add two tasks to the play.</p>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Create the <code>webadmin</code> user group on the managed hosts by using the <code>ansible.builtin.group</code> module in the first task.</p>
-</div>
-<div class="paragraph">
-<p>Create the users specified in the <code>vars/users_vars.yml</code> file by using the <code>ansible.builtin.user</code> module to loop over those variables in the second task.</p>
-</div>
-<div class="paragraph">
-<p>Run the <code>users.yml</code> playbook.</p>
-</div>
-</div>
-</div>
+<p>Use the <code>registry.lab.example.com/ubi9/ubi</code> image to create a new container that prints the <code>Hello Red&#160;Hat</code> text.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Add the first task to the play to ensure that the group <code>webadmin</code> exists on your managed hosts.</p>
+<p>Log in to the classroom registry. Use <code>admin</code> as the username, and <code>redhat321</code> as the password.</p>
 <div class="openblock">
 <div class="content">
-<div class="paragraph">
-<p>The first task should consist of the following content:</p>
-</div>
 <div class="listingblock">
 <div class="content">
-<pre>    - name: Add webadmin group
-      ansible.builtin.group:
-        name: webadmin
-        state: present</pre>
+<pre>[student@workstation ~]$ <strong>podman login registry.lab.example.com --tls-verify=false</strong>
+Username: <strong>admin</strong>
+Password: <strong>redhat321</strong>
+Login Succeeded!</pre>
 </div>
 </div>
 </div>
 </div>
 </li>
 <li>
-<p>Add a second task to the play that uses the <code>ansible.builtin.user</code> module to ensure that the users exist on your managed hosts.</p>
+<p>Use the <code>podman pull</code> command to fetch the image from the registry.</p>
 <div class="openblock">
 <div class="content">
-<div class="paragraph">
-<p>Add a <code>loop: "{{ users }}"</code> clause to the task to iterate over every user found in the <code>vars/users_vars.yml</code> file.</p>
-</div>
-<div class="paragraph">
-<p>For the <code>name</code> parameter for the users, use <code>item['username']</code>, not <code>item</code>. This allows each list item in the variable file to be structured as a dictionary of multiple variables that includes additional information about each user in the list, specifically which supplementary groups the user should be a member of.</p>
-</div>
-<div class="paragraph">
-<p>The entire playbook should consist of the following content:</p>
-</div>
 <div class="listingblock">
 <div class="content">
-<pre>---
-- name: Create multiple local users
-  hosts: webservers
-  vars_files:
-    - vars/users_vars.yml
-  tasks:
-
-    - name: Add webadmin group
-      ansible.builtin.group:
-        name: webadmin
-        state: present
-
-    - name: Create user accounts
-      ansible.builtin.user:
-        name: "{{ item['username'] }}"
-        groups: "{{ item['groups'] }}"
-      loop: "{{ users }}"</pre>
+<pre>[student@workstation ~]$ <strong>podman pull registry.lab.example.com/ubi9/ubi \
+ --tls-verify=false</strong>
+Trying to pull registry.lab.example.com/ubi9/ubi:latest...
+...output omitted...
+Getting image source signatures
+Copying blob 1153e061da4e done
+Copying config 8d2a8803cf done
+Writing manifest to image destination
+8d2a8803cfca17a81eb9412e1f33ae1c6fe3797553e9b819899dc03f1657cf12</pre>
 </div>
 </div>
 </div>
 </div>
 </li>
 <li>
-<p>Run the <code>users.yml</code> playbook:</p>
+<p>Use the <code>podman images</code> command to verify that the image is available locally.</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation system-users]$ <strong>ansible-navigator run \</strong>
- <strong>-m stdout users.yml</strong>
-
-PLAY [Create multiple local users] *******************************************
-
-TASK [Gathering Facts] *******************************************************
-ok: [servera.lab.example.com]
-
-TASK [Add webadmin group] ****************************************************
-changed: [servera.lab.example.com]
-
-TASK [Create user accounts] **************************************************
-changed: [servera.lab.example.com] =&gt; (item={'username': 'user1', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] =&gt; (item={'username': 'user2', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] =&gt; (item={'username': 'user3', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] =&gt; (item={'username': 'user4', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] =&gt; (item={'username': 'user5', 'groups': 'webadmin'})
-
-PLAY RECAP *******************************************************************
-servera.lab.example.com    : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</pre>
+<pre>[student@workstation ~]$ <strong>podman images</strong>
+REPOSITORY                         TAG         IMAGE ID      CREATED       SIZE
+registry.lab.example.com/ubi9/ubi  latest      8d2a8803cfca  3 months ago  219 MB</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>In a command line terminal, use <code>podman run</code> to create a new container. Provide an <code>echo</code> command to be executed inside the container.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation ~]$ <strong>podman run --rm registry.lab.example.com/ubi9/ubi
+ echo 'Hello General Motors'</strong>
+Hello General Motors</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the container is not running after the execution finishes.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation ~]$ <strong>podman ps</strong>
+CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES</pre>
 </div>
 </div>
 </div>
@@ -366,196 +257,127 @@ servera.lab.example.com    : ok=3    changed=2    unreachable=0    failed=0    s
 </div>
 </li>
 <li>
-<p>Ensure the SSH public keys have been properly distributed to the managed hosts by adding a third task to the play that uses the <code>ansible.posix.authorized_key</code> module.</p>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>In the <code>files</code> directory, each user has a unique SSH public key file. The module loops through the list of users, finds the appropriate key by using the <code>username</code> variable, and pushes the key to the managed host.</p>
-</div>
-<div class="paragraph">
-<p>For the <code>key</code> parameter, use the following Jinja2 expression for its value to evaluate the contents of the appropriate public key file. A lookup function is used with the <code>file</code> plug-in to read the file, and its file name is constructed using string operations.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>"{{ lookup('file', 'files/'+ item['username'] + '.key.pub') }}"</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The third task should consist of the following content:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>    - name: Add authorized keys
-      ansible.posix.authorized_key:
-        user: "{{ item['username'] }}"
-        key: "{{ lookup('file', 'files/'+ item['username'] + '.key.pub') }}"
-      loop: "{{ users }}"</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Add a fourth task to the play that uses the <code>ansible.builtin.lineinfile</code> module to modify the <code>sudo</code> configuration file and allow the <code>webadmin</code> group members to use <code>sudo</code> without a password on the managed host. Use the <code>validate</code> parameter to validate the new configuration entry.</p>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>The fourth task should consist of the following content:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>    - name: Modify sudo config to allow webadmin users sudo without a password
-      ansible.builtin.lineinfile:
-        path: /etc/sudoers.d/webadmin
-        state: present
-        create: true
-        mode: 0440
-        line: "%webadmin ALL=(ALL) NOPASSWD: ALL"
-        validate: /usr/sbin/visudo -cf %s</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>Add a fifth task to ensure that the <code>root</code> user is not permitted to log in using SSH directly. Use <code>notify: Restart sshd</code> to trigger a handler to restart SSH.</p>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>The fifth task should consist of the following content:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>    - name: Disable root login via SSH
-      ansible.builtin.lineinfile:
-        dest: /etc/ssh/sshd_config
-        regexp: "^PermitRootLogin"
-        line: "PermitRootLogin no"
-      notify: Restart sshd</pre>
-</div>
-</div>
-</div>
-</div>
-</li>
-<li>
-<p>In the first line after the location of the variable file, add a new handler definition named <code>Restart sshd</code>.</p>
+<p>Explore setting and printing environment variables by using the <code>registry.lab.example.com/ubi9/ubi</code> container image.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Define the <code>Restart sshd</code> handler as follows:</p>
+<p>Use the <code>-e</code> option in the <code>podman run</code> command to set environment variables. Use the <code>printenv</code> command that is packaged in the container image to print the values of the environment variables.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation ~]$ <strong>podman run --rm -e GREET=Hello -e NAME='General Motors' \
+ registry.lab.example.com/ubi9/ubi printenv GREET NAME</strong>
+Hello
+General Motors</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the container is not running after the execution finishes.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation ~]$ <strong>podman ps</strong>
+CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Use the <code>registry.lab.example.com/rhel9/httpd-24</code> image to run a new container that creates an Apache HTTP server.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Use the <code>podman pull</code> command to fetch the image from the registry.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation ~]$ <strong>podman pull registry.lab.example.com/rhel9/httpd-24 \
+ --tls-verify=false</strong>
+Trying to pull registry.lab.example.com/rhel9/httpd-24:latest...
+...output omitted...
+Copying blob 358ca3c2eaff done
+Copying blob e584cd196457 done
+Copying config a42923e055 done
+Writing manifest to image destination
+a42923e05589d2d10c25e87736bc3b9537c38c2a6a87f37e9a71e288b01738a6</pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Use the <code>podman run</code> command to start the <code>httpd</code> container. Use the <code>-p</code> option in the <code>podman run</code> command to redirect traffic from port <code>8080</code> on your machine to port <code>8080</code> inside the container.</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>[student@workstation ~]$ <strong>podman run --name=httpd -p 8080:8080 \
+ registry.lab.example.com/rhel9/httpd-24</strong>
+=&gt; sourcing 10-set-mpm.sh ...
+=&gt; sourcing 20-copy-config.sh ...
+=&gt; sourcing 40-ssl-certs.sh ...
+---&gt; Generating SSL key pair for httpd...
+...output omitted...
+[Thu Jun 06 00:02:06.591391 2024] [mpm_event:notice] [pid 1:tid 1] AH00489: Apache/2.4.57 (Red Hat Enterprise Linux) OpenSSL/3.0.7 configured -- resuming normal operations
+[Thu Jun 06 00:02:06.591430 2024] [core:notice] [pid 1:tid 1] AH00094: Command line: 'httpd -D FOREGROUND'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The container keeps running and the logs are displayed in your terminal.</p>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>In a web browser, navigate to <code>http://localhost:8080</code>. Verify that the HTTP server is running at the 8080 port (if you see a Red Hat Enterprise Linux Test Page, you have done it correctly).</p>
+</li>
+<li>
+<p>Go back to your command-line terminal. Press <code>Ctrl+C</code> to stop the container.</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
 <pre><em>...output omitted...</em>
-    - vars/users_vars.yml
-  handlers:
-    - name: Restart sshd
-      ansible.builtin.service:
-        name: sshd
-        state: restarted</pre>
+<code>^C</code>
+[Thu Jun 06 00:04:13.467695 2024] [mpm_event:notice] [pid 1:tid 1] AH00491: caught SIGTERM, shutting down</pre>
 </div>
 </div>
 </div>
 </div>
 </li>
 <li>
-<p>The <code>users.yml</code> playbook should consist of the following content:</p>
+<p>Create another container, this time by adding the <code>-d</code> option. The container runs in the background.</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>---
-- name: Create multiple local users
-  hosts: webservers
-  vars_files:
-    - vars/users_vars.yml
-  handlers:
-    - name: Restart sshd
-      ansible.builtin.service:
-        name: sshd
-        state: restarted
-
-  tasks:
-    - name: Add webadmin group
-      ansible.builtin.group:
-        name: webadmin
-        state: present
-
-    - name: Create user accounts
-      ansible.builtin.user:
-        name: "{{ item['username'] }}"
-        groups: "{{ item['groups'] }}"
-      loop: "{{ users }}"
-
-    - name: Add authorized keys
-      ansible.posix.authorized_key:
-        user: "{{ item['username'] }}"
-        key: "{{ lookup('file', 'files/'+ item['username'] + '.key.pub') }}"
-      loop: "{{ users }}"
-
-    - name: Modify sudo config to allow webadmin users sudo without a password
-      ansible.builtin.lineinfile:
-        path: /etc/sudoers.d/webadmin
-        state: present
-        create: true
-        mode: 0440
-        line: "%webadmin ALL=(ALL) NOPASSWD: ALL"
-        validate: /usr/sbin/visudo -cf %s
-
-    - name: Disable root login via SSH
-      ansible.builtin.lineinfile:
-        dest: /etc/ssh/sshd_config
-        regexp: "^PermitRootLogin"
-        line: "PermitRootLogin no"
-      notify: Restart sshd</pre>
+<pre>[student@workstation ~]$ <strong>podman run --name=httpd2 -d \
+ -p 8080:8080 registry.lab.example.com/rhel9/httpd-24</strong>
+08ac7ce948feb65f76f82305d556843a898b60200f5b4f37d1ecb8ea381199ff</pre>
 </div>
 </div>
 </div>
 </div>
 </li>
 <li>
-<p>Run the <code>users.yml</code> playbook.</p>
+<p>Verify that the container is running in the background.</p>
 <div class="openblock">
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre>[student@workstation system-users]$ <strong>ansible-navigator run \</strong>
- <strong>-m stdout users.yml</strong>
-
-PLAY [Create multiple local users] *******************************************
-
-TASK [Gathering Facts] *******************************************************
-ok: [servera.lab.example.com]
-
-TASK [Add webadmin group] ****************************************************
-ok: [servera.lab.example.com]
-
-TASK [Create user accounts] **************************************************
-ok: [servera.lab.example.com] =&gt; (item={'username': 'user1', 'groups': 'webadmin'})
-ok: [servera.lab.example.com] =&gt; (item={'username': 'user2', 'groups': 'webadmin'})
-ok: [servera.lab.example.com] =&gt; (item={'username': 'user3', 'groups': 'webadmin'})
-ok: [servera.lab.example.com] =&gt; (item={'username': 'user4', 'groups': 'webadmin'})
-ok: [servera.lab.example.com] =&gt; (item={'username': 'user5', 'groups': 'webadmin'})
-
-TASK [Add authorized keys] ***************************************************
-changed: [servera.lab.example.com] =&gt; (item={'username': 'user1', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] =&gt; (item={'username': 'user2', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] =&gt; (item={'username': 'user3', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] =&gt; (item={'username': 'user4', 'groups': 'webadmin'})
-changed: [servera.lab.example.com] =&gt; (item={'username': 'user5', 'groups': 'webadmin'})
-
-TASK [Modify sudo config to allow webadmin users sudo without a password] ***
-changed: [servera.lab.example.com]
-
-TASK [Disable root login via SSH] *******************************************
-changed: [servera.lab.example.com]
-
-RUNNING HANDLER [Restart sshd] **********************************************
-changed: [servera.lab.example.com]
-
-PLAY RECAP ******************************************************************
-servera.lab.example.com    : ok=7    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</pre>
+<pre>[student@workstation ~]$ <strong>podman ps</strong>
+CONTAINER ID  IMAGE                                           COMMAND               CREATED             STATUS             PORTS                   NAMES
+08ac7ce948fe  registry.lab.example.com/rhel9/httpd-24:latest  /usr/bin/run-http...  21 seconds ago  Up 22 seconds  0.0.0.0:8080-&gt;8080/tcp  httpd</pre>
 </div>
 </div>
 </div>
@@ -565,52 +387,34 @@ servera.lab.example.com    : ok=7    changed=4    unreachable=0    failed=0    s
 </div>
 </li>
 <li>
-<p>Use SSH as the <code>user1</code> user and log in to the <code>servera</code> server. After logging in, use <code>sudo -i</code> command to change to the <code>root</code> user.</p>
+<p>Use Podman Desktop to list images and containers.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Use SSH as the <code>user1</code> user and log in to the <code>servera</code> server.</p>
-<div class="openblock">
+<p>Open Podman Desktop.
+Click <strong>Activities</strong> at the upper-left corner of the top bar, and then click the <strong>Podman Desktop</strong> icon.</p>
+<div class="imageblock text-center">
 <div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation system-users]$ <strong>ssh user1@servera</strong>
-Register this system with Red Hat Insights: insights-client --register
-Create an account or view all your systems at https://red.ht/insights-dashboard
-
-[user1@servera ~]$</pre>
-</div>
-</div>
+<img src="_images/podman-desktop-ge-podman-desktop.png" alt="podman desktop ge podman desktop" width="70%">
 </div>
 </div>
 </li>
 <li>
-<p>Change to the <code>root</code> user.</p>
-<div class="openblock">
+<p>Click <strong>Containers</strong> in the Podman Desktop navigation panel.
+The list includes the containers that you created in the exercise.
+Verify that the Apache HTTP container is running.</p>
+<div class="imageblock text-center">
 <div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[user1@servera ~]$ <strong>sudo -i</strong>
-[root@servera ~]#</pre>
-</div>
-</div>
+<img src="_images/podman-desktop-ge-list-containers.png" alt="podman desktop ge list containers" width="95%">
 </div>
 </div>
 </li>
 <li>
-<p>Log out of <code>servera</code>.</p>
-<div class="openblock">
+<p>Click <strong>Images</strong>.
+The list of local images displays the <code>ubi9/ubi</code> and the <code>rhel9/httpd-24</code> images.</p>
+<div class="imageblock text-center">
 <div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[root@servera ~]# <strong>exit</strong>
-logout
-[user1@servera ~]$ <strong>exit</strong>
-logout
-Connection to servera closed.
-[student@workstation system-users]$</pre>
-</div>
-</div>
+<img src="_images/podman-desktop-ge-image-list.png" alt="podman desktop ge image list" width="95%">
 </div>
 </div>
 </li>
@@ -618,26 +422,67 @@ Connection to servera closed.
 </div>
 </li>
 <li>
-<p>Try to log in to <code>servera</code> as the <code>root</code> user directly. This step should fail because the SSH daemon configuration has been modified not to permit direct <code>root</code> user logins.</p>
+<p>Use Podman Desktop to start another Apache HTTP container that maps its port to port 8090 in the workstation.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>From the <code>workstation</code> machine, use SSH as the <code>root</code> user and log in to the <code>servera</code> server.</p>
-<div class="openblock">
+<p>Click the arrow [▶] of the <code>rhel9/httpd-24</code> image to run a new container based on this image.</p>
+</li>
+<li>
+<p>In the container creation form, enter the following values:</p>
+<div class="ulist compact">
+<ul class="compact">
+<li>
+<p>Container name: <code>desktop-test</code></p>
+</li>
+<li>
+<p>Local port for 8080/tcp: <code>8090</code></p>
+</li>
+<li>
+<p>Local port for 8443/tcp: <code>8443</code></p>
+<div class="imageblock text-center">
 <div class="content">
-<div class="listingblock">
-<div class="content">
-<pre>[student@workstation system-users]$ <strong>ssh root@servera</strong>
-root@servera's password: <strong>redhat</strong>
-Permission denied, please try again.
-root@servera's password:</pre>
+<img src="_images/podman-desktop-ge-create-container.png" alt="podman desktop ge create container" width="90%">
 </div>
 </div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Start Container</strong>.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>This confirms that the SSH configuration denied direct access to the system for the <code>root</code> user.</p>
+<p>You can safely ignore the SELinux security warning that displays at the top of the desktop.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Navigate to the containers menu and verify that the <code>desktop-test</code> container is running.</p>
+</li>
+<li>
+<p>In the <code>desktop-test</code> container, click the vertical ellipsis icon [⋮] on the right, select <strong>Open Browser</strong>, and then click <strong>Yes</strong> in the confirmation dialog box.</p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="_images/podman-desktop-ge-open-browser.png" alt="podman desktop ge open browser" width="90%">
 </div>
 </div>
-</div>
+</li>
+<li>
+<p>Verify that the browser can access the HTTP server at <code>http://localhost:8090</code>.</p>
+</li>
+<li>
+<p>Return to Podman Desktop.
+In the <code>desktop-test</code> container, click the <strong>Delete Container</strong> icon to delete the container, and then close Podman Desktop.</p>
 </li>
 </ol>
 </div>
@@ -647,7 +492,7 @@ root@servera's password:</pre>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="section1.html">Exercise: Automate this!</a></span>
+  <span class="prev"><a href="section1.html">Exercise: Can&#8217;t contain the need to get hands-on!</a></span>
   <span class="next"><a href="../appendix/appendix.html">Appendix</a></span>
 </nav>
 </article>

@@ -290,7 +290,7 @@ print("Hello Red Hat!")
 --
 [subs=+quotes]
 ----
-[student@workstation DO400-apps-external]$ *git add hello*
+[student@workstation DO400-apps-external]$ *git add hellorh.py*
 [student@workstation DO400-apps-external]$ *git commit -m "added hello Red Hat"*
 [hello-redhat 60db2e8] added hello Red Hat
  1 file changed, 1 insertion(+)
